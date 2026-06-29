@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Valutazione Scuola Primaria</title>
+<title>Indicazioni di valutazione alla scuola primaria</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: sans-serif; background: #f7f7f5; color: #1a1a1a; min-height: 100vh; }
@@ -564,7 +564,7 @@ const DOMANDE = {
     2: [
       { id:"numeri",    area:"Numeri",    t:"Legge, scrive e ordina i numeri entro il 100?",                                                     frasi: FR_MAT.numeri_12 },
       { id:"composiz",  area:"Valore posizionale", t:"Compone e scompone i numeri entro il 100 riconoscendo il valore posizionale delle cifre?",  frasi: FR_MAT.composiz_12 },
-      { id:"calcolo",   area:"Calcolo",   t:"Esegue addizioni e sottrazioni in colonna con e senza cambio? Sa affidarsi alle tabelline?",         frasi: FR_MAT.calcolo_12 },
+      { id:"calcolo",   area:"Calcolo",   t:"Esegue addizioni e sottrazioni con e senza cambio? Sa affidarsi alle tabelline?",         frasi: FR_MAT.calcolo_12 },
       { id:"problemi",  area:"Problemi",  t:"Legge e comprende il testo di un problema, individua i dati utili e sceglie la strategia?",         frasi: FR_MAT.problemi_12 },
       { id:"geometria", area:"Geometria", t:"Riconosce e classifica linee, figure piane e solidi in base ai loro elementi caratterizzanti?",      frasi: FR_MAT.geometria_12 },
       { id:"dati",      area:"Dati",      t:"Raccoglie dati, costruisce e legge semplici tabelle a doppia entrata?",                             frasi: FR_MAT.dati_12 },
@@ -579,17 +579,17 @@ const DOMANDE = {
     ],
     4: [
       { id:"numeri",    area:"Numeri",    t:"Riconosce il valore posizionale dei numeri entro il 100.000? Compone e scompone numeri interi e decimali?", frasi: FR_MAT.numeri_35 },
-      { id:"frazioni",  area:"Frazioni",  t:"Classifica frazioni proprie, improprie e apparenti? Sa passare dalla frazione al numero decimale?",  frasi: FR_MAT.frazioni_35 },
-      { id:"calcolo",   area:"Calcolo",   t:"Esegue le quattro operazioni con interi e decimali (a mente e in colonna) con sicurezza?",          frasi: FR_MAT.calcolo_35 },
+      { id:"frazioni",  area:"Frazioni",  t:"Riesce a classificare le frazioni? Sa passare dalla frazione al numero decimale e viceversa?",  frasi: FR_MAT.frazioni_35 },
+      { id:"calcolo",   area:"Calcolo",   t:"Esegue le quattro operazioni con interi e decimali con sicurezza?",          frasi: FR_MAT.calcolo_35 },
       { id:"geometria", area:"Spazio e figure", t:"Riconosce, disegna e classifica poligoni, triangoli e angoli?",                               frasi: FR_MAT.geometria_35 },
-      { id:"misure",    area:"Perimetri e aree", t:"Calcola perimetri e aree utilizzando le formule in modo corretto?",                           frasi: FR_MAT.misure_35 },
+      { id:"misure",    area:"Perimetri e aree", t:"Calcola perimetri e aree in modo corretto?",                           frasi: FR_MAT.misure_35 },
       { id:"problemi",  area:"Problemi",  t:"Legge problemi con dati impliciti, formula ipotesi risolutive e argomenta il procedimento?",        frasi: FR_MAT.problemi_35 },
       { id:"dati",      area:"Dati",      t:"Costruisce, legge e interpreta grafici e tabelle? Sa raccogliere dati da un'indagine?",             frasi: FR_MAT.dati_35 },
     ],
     5: [
       { id:"numeri",    area:"Numeri",    t:"Opera con i grandi numeri e i numeri decimali in modo autonomo? Sa scegliere quando usare la calcolatrice?", frasi: FR_MAT.numeri_35 },
-      { id:"calcolo",   area:"Calcolo",   t:"Esegue le quattro operazioni con sicurezza, anche con i decimali (a mente e in colonna)?",          frasi: FR_MAT.calcolo_35 },
-      { id:"misure",    area:"Spazio e misure", t:"Rappresenta, confronta e analizza figure geometriche? Calcola perimetri e aree con le formule?", frasi: FR_MAT.misure_35 },
+      { id:"calcolo",   area:"Calcolo",   t:"Esegue le quattro operazioni con sicurezza, anche con i decimali?",          frasi: FR_MAT.calcolo_35 },
+      { id:"misure",    area:"Spazio e misure", t:"Rappresenta, confronta e analizza figure geometriche? Imposta ragionamenti su perimetro e area? Riesce a calcolarli?", frasi: FR_MAT.misure_35 },
       { id:"problemi",  area:"Problemi",  t:"Riconosce e risolve problemi in modo autonomo, giustificando il procedimento con diverse strategie?", frasi: FR_MAT.problemi_35 },
       { id:"dati",      area:"Dati",      t:"Classifica, raccoglie dati e li rappresenta graficamente? Sa leggere e interpretare grafici di vario tipo?", frasi: FR_MAT.dati_35 },
     ],
@@ -896,9 +896,12 @@ function render() {
 
   let html = `
     <p class="label-top">Strumento docente</p>
-    <h1>Valutazione ${ml() || "scuola primaria"}</h1>
-    <p class="subtitle">Scrutinio di fine anno · Scuola primaria</p>
-    <p style="font-size:12px;color:#999;margin-top:-18px;margin-bottom:28px;font-style:italic">Declinazione traguardi previsti nel PTOF — strumento di prova</p>
+    <h1>Indicazioni di valutazione alla scuola primaria</h1>
+    <p class="subtitle">Declinazioni traguardi previsti nel nostro PTOF · strumento di orientamento</p>
+    ${STATE.step === "setup" ? `<div style="background:#f0f0ec;border-radius:10px;padding:14px 16px;margin-bottom:24px;font-size:13px;color:#444;line-height:1.7">
+      <strong>Come funziona</strong><br>
+      Seleziona la materia e la classe, inserisci il nome dell'alunno/a e rispondi alle domande sugli indicatori di competenza. Lo strumento genera un testo descrittivo per la valutazione e tiene traccia degli alunni inseriti finché la pagina rimane aperta nel browser. Nessun dato viene salvato o inviato: chiudendo la pagina tutto viene cancellato. Al termine puoi stampare o salvare il resoconto completo con i descrittori di tutti gli alunni valutati.
+    </div>` : ""}
   `;
 
   if (STATE.step === "setup") {
@@ -916,7 +919,7 @@ function render() {
         ${[['1','Prima'],['2','Seconda'],['3','Terza'],['4','Quarta'],['5','Quinta']].map(([v,n])=>`<option value="${v}"${STATE.classe===v?' selected':''}>${n}</option>`).join('')}
       </select>
     </div>
-    <button class="btn btn-full" ${(!STATE.materia||!STATE.classe)?"disabled":""} onclick="go('info')">Inizia lo scrutinio →</button>`;
+    <button class="btn btn-full" ${(!STATE.materia||!STATE.classe)?"disabled":""} onclick="go('info')">Inizia la valutazione →</button>`;
   }
 
   else if (STATE.step === "info") {
@@ -926,10 +929,10 @@ function render() {
     html += `<p class="step-nome">Nuovo alunno/a — Classe ${STATE.classe}ª — ${ml()}</p>
     <div class="mb24">
       <label class="section-label">Nome</label>
-      <input type="text" id="inp-nome" value="${escHtml(STATE.nome)}" placeholder="es. Sofia" oninput="STATE.nome=this.value" onkeydown="if(event.key==='Enter')startDom()">
+      <input type="text" id="inp-nome" value="${escHtml(STATE.nome)}" placeholder="es. Rita" oninput="STATE.nome=this.value" onkeydown="if(event.key==='Enter')startDom()">
     </div>
     <div class="flex-row">
-      ${STATE.alunni.length ? `<button class="btn" onclick="go('riepilogo')">Fine scrutinio →</button>` : ""}
+      ${STATE.alunni.length ? `<button class="btn" onclick="go('riepilogo')">Fine valutazione →</button>` : ""}
       <button class="btn btn-flex2" onclick="startDom()">Inizia valutazione →</button>
     </div>`;
   }
@@ -965,12 +968,12 @@ function render() {
       }).join("")}
     </div>
     <div class="testo-box">
-      <p class="testo-label">Testo per lo scrutinio</p>
+      <p class="testo-label">Testo descrittivo per la valutazione</p>
       <p class="testo-content">${escHtml(testo)}</p>
     </div>
     <div class="flex-row">
       <button class="btn btn-flex2" style="background:${gc.bg};color:${gc.color};border-color:${gc.color}" onclick="salva();go('info')">Salva e prossimo →</button>
-      <button class="btn" onclick="salva();go('riepilogo')">Fine scrutinio</button>
+      <button class="btn" onclick="salva();go('riepilogo')">Fine valutazione</button>
     </div>`;
   }
 
@@ -978,7 +981,7 @@ function render() {
     html += `
     <div class="riepilogo-header">
       <div>
-        <p class="riepilogo-title">Scrutinio ${ml()} — Classe ${STATE.classe}ª</p>
+        <p class="riepilogo-title">Valutazione ${ml()} — Classe ${STATE.classe}ª</p>
         <p class="riepilogo-sub">${STATE.alunni.length} alunni valutati</p>
       </div>
       <button class="btn" onclick="stampaPDF()">Stampa / PDF →</button>
@@ -996,7 +999,7 @@ function render() {
     }).join("")}
     <div class="flex-row" style="margin-top:16px">
       <button class="btn" onclick="go('info')">+ Aggiungi alunno/a</button>
-      <button class="btn" onclick="reset()">Nuovo scrutinio</button>
+      <button class="btn" onclick="reset()">Nuova valutazione</button>
     </div>`;
   }
 
@@ -1060,12 +1063,12 @@ function stampaPDF() {
     </tr>`;
   });
   const w = window.open("","_blank");
-  w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Scrutinio ${label}</title>
+  w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Valutazione ${label}</title>
   <style>@page{margin:2cm}body{font-family:Georgia,serif;color:#222;margin:0}h1{font-size:20px;font-weight:normal;margin:0 0 4px}
   p.sub{font-size:12px;color:#888;margin:0 0 20px}table{width:100%;border-collapse:collapse}
   th{font-size:10px;text-transform:uppercase;color:#aaa;padding:8px 12px;text-align:left;border-bottom:2px solid #ddd}</style>
   </head><body>
-  <h1>Scrutinio ${label} — Classe ${['','prima','seconda','terza','quarta','quinta'][parseInt(STATE.classe)]||STATE.classe}</h1>
+  <h1>Valutazione ${label} — Classe ${['','prima','seconda','terza','quarta','quinta'][parseInt(STATE.classe)]||STATE.classe}</h1>
   <p class="sub">Anno scolastico 2024/25 · ${oggi} · ${STATE.alunni.length} alunni</p>
   <table><thead><tr><th style="width:18%">Alunno/a</th><th style="width:12%">Giudizio</th><th style="width:70%">Descrittori</th></tr></thead>
   <tbody>${righe}</tbody></table></body></html>`);
