@@ -130,6 +130,13 @@
   .cella-risultato.risultato-composto { font-size: clamp(0.65rem, 1.7vmin, 0.9rem); }
   .cella-vuota { visibility: hidden; }
 
+  #titolo-scheda {
+    display: none;
+    text-align: center; margin: 0.5vh auto 2vh; padding: 0 4vw;
+    font-size: clamp(1.2rem, 4vmin, 1.8rem); font-weight: 700;
+    color: #4a4038; letter-spacing: 0.02em;
+  }
+
   #pdf-footer {
     display: none;
     flex-direction: column;
@@ -153,7 +160,8 @@
     fieldset, #config { display: none !important; }
     body { padding-bottom: 0 !important; }
     #logo-wrap { padding-top: 0; }
-    h1 { margin: 0.5vh auto 1.5vh; }
+    h1 { display: none !important; }
+    #titolo-scheda { display: block !important; }
     #risultato { padding-bottom: 0 !important; }
     h2.titolo-griglia { margin-bottom: 1vh; }
     #griglia-risultati { margin-bottom: 0.3vh; }
@@ -266,7 +274,7 @@
       <label for="input-quantita">Numero di operazioni:</label>
       <input type="number" id="input-quantita" value="15" min="4" max="60">
     </div>
-    <p style="font-size:clamp(0.68rem,1.4vmin,0.78rem); color:#a8967a; margin-top:8px;">Con un massimo di 12 operazioni, testi e soluzioni entrano in una sola pagina di stampa.</p>
+    <p style="font-size:clamp(0.68rem,1.4vmin,0.78rem); color:#a8967a; margin-top:8px;">Con un massimo di 15 operazioni, testi e soluzioni entrano in una sola pagina di stampa.</p>
   </fieldset>
 
   <button id="btn-genera">Genera ▶</button>
@@ -274,6 +282,7 @@
 </div>
 
 <div id="risultato">
+  <h1 id="titolo-scheda">Operazioni</h1>
   <div class="barra-azioni">
     <button class="btn-secondario" id="btn-nuove">↺ Nuove operazioni</button>
     <button class="btn-secondario" id="btn-impostazioni">⚙ Cambia impostazioni</button>
