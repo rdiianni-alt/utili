@@ -489,6 +489,24 @@ document.getElementById('btn-impostazioni').addEventListener('click', () => {
 document.getElementById('btn-stampa').addEventListener('click', () => {
   window.print();
 });
+
+(function() {
+  let ultimaAltezza = 0;
+  function inviaAltezza() {
+    const h = document.documentElement.scrollHeight;
+    if (h !== ultimaAltezza) {
+      ultimaAltezza = h;
+      window.parent.postMessage({ tipo: 'altezza-iframe', altezza: h }, '*');
+    }
+  }
+  window.addEventListener('load', inviaAltezza);
+  window.addEventListener('resize', inviaAltezza);
+  if (window.ResizeObserver) {
+    new ResizeObserver(inviaAltezza).observe(document.documentElement);
+  } else {
+    setInterval(inviaAltezza, 500);
+  }
+})();
 </script>
 </body>
 </html>
