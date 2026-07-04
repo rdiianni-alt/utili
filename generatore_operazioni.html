@@ -130,15 +130,38 @@
   .cella-risultato.risultato-composto { font-size: clamp(0.65rem, 1.7vmin, 0.9rem); }
   .cella-vuota { visibility: hidden; }
 
+  #pdf-footer {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    margin-top: 1.2vh;
+  }
+  #pdf-footer img {
+    width: 70px; height: 70px; min-width: 70px; min-height: 70px;
+    object-fit: contain; border-radius: 50%;
+  }
+  #pdf-footer span {
+    font-size: 0.68rem; color: #8a7a63;
+  }
+
   @media print {
+    @page { margin: 10mm; }
     .barra-azioni { display: none !important; }
     html, body, #risultato { background: white !important; }
     fieldset, #config { display: none !important; }
+    body { padding-bottom: 0 !important; }
     #logo-wrap { padding-top: 0; }
+    h1 { margin: 0.5vh auto 1.5vh; }
+    #risultato { padding-bottom: 0 !important; }
+    h2.titolo-griglia { margin-bottom: 1vh; }
+    #griglia-risultati { margin-bottom: 0.3vh; }
     * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
     .riga-op, .cella-risultato { break-inside: avoid; page-break-inside: avoid; }
     #griglia-risultati { break-inside: avoid; }
     .cella-risultato { min-height: 50px !important; }
+    #pdf-footer { display: flex !important; break-inside: avoid; page-break-inside: avoid; }
   }
 
   @media (max-width: 480px) {
@@ -261,6 +284,11 @@
 
   <h2 class="titolo-griglia">Trova i risultati</h2>
   <div id="griglia-risultati"></div>
+
+  <div id="pdf-footer">
+    <img src="https://raw.githubusercontent.com/rdiianni-alt/matematichenonsinasce/9c58ec98f974f43638aef01c054c8c578ed17ce4/logoconkalimba.png" alt="Logo">
+    <span>© Rita Di Ianni · idee e materiali per la scuola primaria</span>
+  </div>
 </div>
 
 <script>
