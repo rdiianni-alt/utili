@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Obiettivi di apprendimento — Indicazioni nazionali 2025</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+  :root{
+    --paper:#F3F1E7;
+    --paper-line:#DBD5C0;
+    --margin-red:#B4463F;
+    --ink:#20293A;
+    --ink-soft:#5B6473;
+    --green:#2F5D50;
+    --green-dark:#1E3F36;
+    --green-pale:#E4ECE8;
+    --card:#FBFAF5;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      repeating-linear-gradient(
+        var(--paper),
+        var(--paper) 31px,
+        var(--paper-line) 32px
+      );
+    background-color:var(--paper);
+    color:var(--ink);
+    font-family:'IBM Plex Sans', sans-serif;
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    padding:56px 24px 80px;
+  }
+  .sheet{
+    width:100%;
+    max-width:760px;
+    position:relative;
+    padding-left:44px;
+  }
+  .sheet::before{
+    content:"";
+    position:absolute;
+    top:-24px;
+    bottom:-24px;
+    left:28px;
+    width:2px;
+    background:var(--margin-red);
+    opacity:.55;
+  }
+  header.top{
+    margin-bottom:36px;
+  }
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--green-dark);
+    margin:0 0 10px;
+  }
+  h1{
+    font-family:'Source Serif 4', serif;
+    font-weight:600;
+    font-size:clamp(30px, 5vw, 42px);
+    line-height:1.08;
+    margin:0 0 12px;
+    color:var(--ink);
+  }
+  .lede{
+    font-size:15px;
+    line-height:1.55;
+    color:var(--ink-soft);
+    max-width:56ch;
+    margin:0;
+  }
+  .card{
+    background:var(--card);
+    border:1px solid var(--paper-line);
+    border-radius:2px;
+    box-shadow:0 1px 0 var(--paper-line), 0 18px 40px -28px rgba(32,41,58,.35);
+    padding:32px 32px 30px;
+  }
+  .section-label{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--green-dark);
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin:0 0 14px;
+  }
+  .section-label .n{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:20px;height:20px;
+    border:1px solid var(--green-dark);
+    border-radius:50%;
+    font-size:10px;
+  }
+  .section-label::after{
+    content:"";
+    flex:1;
+    height:1px;
+    background:var(--paper-line);
+  }
+  fieldset{
+    border:0;
+    padding:0;
+    margin:0 0 30px;
+  }
+  .subjects{
+    display:grid;
+    grid-template-columns:repeat(2, minmax(0,1fr));
+    gap:9px 12px;
+  }
+  @media (max-width:520px){
+    .subjects{grid-template-columns:1fr;}
+    .sheet{padding-left:34px;}
+    .card{padding:26px 20px 24px;}
+  }
+  .chip{
+    position:relative;
+  }
+  .chip input{
+    position:absolute;
+    opacity:0;
+    width:100%;height:100%;
+    margin:0;
+    cursor:pointer;
+  }
+  .chip label{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:11px 14px;
+    border:1px solid var(--paper-line);
+    border-radius:3px;
+    background:#fff;
+    font-size:14.5px;
+    color:var(--ink);
+    cursor:pointer;
+    transition:border-color .12s, background .12s;
+    user-select:none;
+  }
+  .chip label .box{
+    width:15px;height:15px;
+    border:1.5px solid var(--ink-soft);
+    border-radius:3px;
+    flex:0 0 auto;
+    position:relative;
+    transition:background .12s, border-color .12s;
+  }
+  .chip input:checked + label{
+    border-color:var(--green);
+    background:var(--green-pale);
+  }
+  .chip input:checked + label .box{
+    background:var(--green);
+    border-color:var(--green);
+  }
+  .chip input:checked + label .box::after{
+    content:"";
+    position:absolute;
+    left:4px; top:1px;
+    width:4px; height:8px;
+    border:solid white;
+    border-width:0 2px 2px 0;
+    transform:rotate(40deg);
+  }
+  .chip input:focus-visible + label{
+    outline:2px solid var(--green-dark);
+    outline-offset:2px;
+  }
+  .classes{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+  }
+  .classcard{ position:relative; }
+  .classcard input{
+    position:absolute; opacity:0; width:100%; height:100%; margin:0; cursor:pointer;
+  }
+  .classcard label{
+    display:block;
+    border:1px solid var(--paper-line);
+    border-radius:3px;
+    background:#fff;
+    padding:16px 16px 14px;
+    cursor:pointer;
+    transition:border-color .12s, background .12s;
+  }
+  .classcard label .k{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    color:var(--ink-soft);
+    letter-spacing:.08em;
+    text-transform:uppercase;
+  }
+  .classcard label .v{
+    font-family:'Source Serif 4', serif;
+    font-size:20px;
+    font-weight:600;
+    margin-top:4px;
+  }
+  .classcard input:checked + label{
+    border-color:var(--green);
+    background:var(--green-pale);
+  }
+  .classcard input:focus-visible + label{
+    outline:2px solid var(--green-dark);
+    outline-offset:2px;
+  }
+  .actions{
+    display:flex;
+    align-items:center;
+    gap:16px;
+    margin-top:8px;
+    flex-wrap:wrap;
+  }
+  button#generate{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:13px;
+    letter-spacing:.09em;
+    text-transform:uppercase;
+    color:#fff;
+    background:var(--green);
+    border:1px solid var(--green-dark);
+    border-radius:3px;
+    padding:13px 26px;
+    cursor:pointer;
+    transition:background .12s, transform .05s;
+  }
+  button#generate:hover{ background:var(--green-dark); }
+  button#generate:active{ transform:translateY(1px); }
+  button#generate:disabled{
+    opacity:.5;
+    cursor:not-allowed;
+  }
+  .status{
+    font-size:13px;
+    color:var(--ink-soft);
+    min-height:18px;
+  }
+  .status.err{ color:var(--margin-red); }
+  footer.foot{
+    margin-top:26px;
+    font-size:12px;
+    color:var(--ink-soft);
+    line-height:1.6;
+  }
+  footer.foot a{ color:var(--green-dark); }
+  @media (prefers-reduced-motion: reduce){
+    *{ transition:none !important; }
+  }
+</style>
+</head>
+<body>
+<div class="sheet">
+  <header class="top">
+    <p class="eyebrow">Indicazioni nazionali 2025 &middot; Scuola primaria</p>
+    <h1>Obiettivi di apprendimento</h1>
+    <p class="lede">Seleziona le materie e la classe: viene generato un unico PDF con gli obiettivi specifici di apprendimento del testo ministeriale ufficiale — una materia per pagina, con una casella accanto a ogni obiettivo da colorare per tenere traccia del lavoro svolto.</p>
+  </header>
+
+  <div class="card">
+    <fieldset>
+      <p class="section-label"><span class="n">1</span> Materie</p>
+      <div class="subjects" id="subjects"></div>
+    </fieldset>
+
+    <fieldset>
+      <p class="section-label"><span class="n">2</span> Classe</p>
+      <div class="classes" id="classes">
+        <div class="classcard">
+          <input type="radio" name="classe" id="classe-terza" value="terza" checked>
+          <label for="classe-terza"><span class="k">Fine</span><div class="v">Classe terza</div></label>
+        </div>
+        <div class="classcard">
+          <input type="radio" name="classe" id="classe-quinta" value="quinta">
+          <label for="classe-quinta"><span class="k">Fine</span><div class="v">Classe quinta</div></label>
+        </div>
+      </div>
+    </fieldset>
+
+    <div class="actions">
+      <button id="generate" type="button">Genera PDF</button>
+      <span class="status" id="status"></span>
+    </div>
+  </div>
+
+  <footer class="foot">
+    Fonte dei contenuti: <em>Indicazioni nazionali per il curricolo della scuola dell'infanzia e del primo ciclo d'istruzione</em>, Decreto del Ministro dell'Istruzione e del Merito 9 dicembre 2025, n. 221.
+  </footer>
+</div>
+
+<script>
+const OBJECTIVES = {"Italiano": {"terza": [{"type": "header", "text": "Lingua e letteratura"}, {"type": "item", "text": "Alfabeto. Enunciare nell’ordine convenzionale le lettere dell’alfabeto italiano integrate da quelle (J, K, W, X, Y) assunte da altre lingue, per un totale di 26 lettere."}, {"type": "item", "text": "Scrittura. Scrivere con grafia manuale sia in stampatello sia in corsivo. Saper leggere i caratteri tipografici usati nei libri di testo e di lettura."}, {"type": "item", "text": "Grafia dell’italiano. Scrivere e conoscere i fonemi e grafemi difficili per la reciproca mancata corrispondenza biunivoca: ad esempio conoscere l’uso dell’accento che distingue <è> verbo da <e> congiunzione, l’uso di <h> che distingue graficamente il verbo <ho> dalla congiunzione <o>; utilizzare la divisione in sillabe."}, {"type": "item", "text": "Interpunzione, segni grafici e paragrafematici. Usare i segni paragrafematici, nella loro funzione sintattica e testuale, in particolare i seguenti: punto, punto e virgola, virgola, due punti, virgolette per introdurre il discorso diretto, punto esclamativo, punto interrogativo e ‘a capo’; conoscere la funzione dell’apostrofo come segno di elisione (spesso confuso con l’accento) e le regole dell’accento grafico e dell’elisione."}, {"type": "item", "text": "Tempi e modi verbali. Conoscere e adoperare correttamente i tempi e i modi verbali, a cominciare dall’indicativo per indicare il presente, il futuro e le gradazioni del passato."}, {"type": "item", "text": "Ascolto e dialogo. Essere in grado di comprendere e dare semplici istruzioni su un’attività che lo studente conosce bene; saper interagire in una conversazione formulando domande e dando risposte pertinenti intorno ad argomenti di cui abbia diretta esperienza; essere in grado di raccontare oralmente un’esperienza personale o una storia immaginaria rispettando l’ordine logico e cronologico."}, {"type": "item", "text": "Lettura e interpretazione. Leggere in silenzio e ad alta voce; comprendere il significato di brevi testi scritti riconoscendone la funzione (descrivere, narrare, fornire istruzioni, eccetera) e individuandone gli elementi essenziali (personaggi, luoghi, tempi);"}, {"type": "item", "text": "Produzione di testi. Saper registrare e organizzare dati e istruzioni; saper produrre facili testi di tipo descrittivo e narrativo."}, {"type": "item", "text": "Memorizzazione di testi. Saper memorizzare testi poetici; apprendere semplici tecniche di memorizzazione di testi come mappe mentali."}], "quinta": [{"type": "header", "text": "Lingua e letteratura"}, {"type": "item", "text": "Grammatica e ampliamento del lessico. Conoscere la grammatica per le classi di parole; dunque, identificare le parti del discorso, attraverso esercizi pratici con equilibrato ricorso a definizioni e classificazioni. In fase di avvio, la individuazione delle regole grammaticali deve svilupparsi partendo dalla osservazione di testi orali o scritti; riconoscere la funzione di connessione delle preposizioni e congiunzioni, la funzione di modificazione propria dell’avverbio; riconoscere le categorie di numero, spazio, tempo, persona nella variazione formale delle parole d’uso comune; saper riconoscere le parole composte, derivate, alterate; saper impiegare nell’uso orale e scritto i vocaboli fondamentali e quelli di alto uso in modo adeguato ai contesti comunicativi; saper impiegare i più frequenti termini specifici legati alle discipline di studio."}, {"type": "item", "text": "Strategie di controllo della propria produzione linguistica. Saper adoperare i registri linguistici in maniera adeguata, distinguendo fra diversi registri (formale, colloquiale, ecc.); conoscere le fondamentali convenzioni ortografiche; servirsi di queste conoscenze per rivedere la propria produzione scritta e correggere eventuali errori."}, {"type": "item", "text": "Oralità. Saper comunicare in modo adeguato e differenziato in base ai diversi contesti di interazione; saper organizzare un semplice discorso orale su un tema affrontato in classe con un breve intervento preparato in precedenza; saper esporre un argomento di studio utilizzando una scaletta o appunti."}, {"type": "item", "text": "Ascolto e dialogo. Saper partecipare a una conversazione in maniera educata, ascoltando rispettosamente le opinioni dell’interlocutore e argomentando a propria volta in modo ordinato; riferire su esperienze personali organizzando il racconto in modo essenziale e chiaro, rispettando l’ordine logico e cronologico e inserendo elementi descrittivi funzionali al racconto; saper cogliere in una discussione le posizioni espresse dai compagni ed esprimere la propria opinione su un argomento con un breve intervento preparato in precedenza."}, {"type": "item", "text": "Lettura e interpretazione dei testi letterari. Leggere sia silenziosamente sia ad alta voce; comprendere il significato di semplici testi scritti riconoscendone la funzione (descrivere, narrare, fornire istruzioni, eccetera) e individuandone gli elementi essenziali (personaggi, luoghi, tempi); aver acquisito familiarità con semplici testi letterari, in prosa e in versi, che attivino la propria competenza interpretativa; comprendere l’importanza della componente sonora del linguaggio (timbro, intonazione, accentazione, pause) e delle figure di suono nei testi poetici (rime, assonanze e consonanze, ritmo), e sapersi servire dell’una e delle altre nella produzione di testi creativi (uno slogan, un breve testo in versi); essere in grado di sfruttare le informazioni contenute nella titolazione, nelle immagini e nelle didascalie per farsi un’idea del testo che si intende leggere; saper leggere e confrontare informazioni provenienti da testi diversi per farsi un’idea di un argomento e per trovare spunti a partire dai quali parlare o scrivere."}, {"type": "item", "text": "Scrittura di testi argomentativi e creativi. Produrre semplici testi scritti coesi e coerenti che riferiscano esperienze proprie o altrui (autobiografia, biografia, racconto, eccetera), esprimano opinioni o stati d’animo, espongano temi nella forma della relazione o del riassunto, diano informazioni, per esempio nella forma di una lettera o di una e-mail; saper scrivere una lettera indirizzata a destinatari noti, adeguando le forme espressive al destinatario e alla situazione comunicativa; saper esprimere per iscritto esperienze, emozioni, stati d’animo, idee sotto forma di diario; essere in grado di collaborare alla redazione di testi scritti a più mani in cui si fanno resoconti di esperienze scolastiche, si illustra un procedimento, si registrano opinioni su un argomento trattato in classe."}]}, "Lingua Inglese": {"terza": [{"type": "header", "text": "Ascolto (comprensione orale)"}, {"type": "item", "text": "Individuare e produrre suoni."}, {"type": "item", "text": "Abbinare suoni e parole (fonemi-grafemi)."}, {"type": "item", "text": "Conoscere e comprendere vocaboli, istruzioni, espressioni e frasi di uso quotidiano, relativi a sé stessi, ai compagni, alla famiglia."}, {"type": "item", "text": "Individuare, numerare e classificare gli oggetti."}, {"type": "header", "text": "Parlato (produzione e interazione orale)"}, {"type": "item", "text": "Produrre frasi riferite ad oggetti, luoghi, persone, situazioni note."}, {"type": "item", "text": "Interagire con un compagno per presentarsi e/o giocare, utilizzando espressioni e frasi memorizzate adatte alla situazione."}, {"type": "header", "text": "Lettura (comprensione scritta)"}, {"type": "item", "text": "Comprendere testi di cartoline, biglietti e brevi messaggi, accompagnati preferibilmente da supporti visivi o sonori, cogliendo parole e frasi già acquisite a livello orale."}, {"type": "item", "text": "Individuare, numerare e classificare gli oggetti."}, {"type": "header", "text": "Scrittura (produzione scritta)"}, {"type": "item", "text": "Scrivere parole e semplici frasi di uso quotidiano attinenti alle attività svolte in classe e a interessi personali e del gruppo."}, {"type": "item", "text": "Individuare, numerare e classificare gli oggetti."}], "quinta": [{"type": "header", "text": "Ascolto (comprensione orale)"}, {"type": "item", "text": "Comprendere brevi dialoghi, istruzioni, espressioni e frasi di uso quotidiano, se pronunciate chiaramente, e identificare il tema generale di un discorso in cui si parla di argomenti conosciuti."}, {"type": "item", "text": "Comprendere brevi testi multimediali identificandone parole chiave e il senso generale."}, {"type": "header", "text": "Parlato (produzione e interazione orale)"}, {"type": "item", "text": "Descrivere persone, luoghi e oggetti familiari utilizzando parole e frasi già incontrate ascoltando e/o leggendo."}, {"type": "item", "text": "Comunicare semplici informazioni afferenti alla sfera personale, integrando il significato di ciò che si dice con mimica e gesti."}, {"type": "item", "text": "Interagire con un compagno o un adulto, utilizzando espressioni e frasi adatte alla situazione."}, {"type": "header", "text": "Lettura (comprensione scritta)"}, {"type": "item", "text": "Leggere e comprendere brevi e semplici testi, accompagnati preferibilmente da supporti visivi, cogliendo il loro significato globale e identificando parole e frasi familiari."}, {"type": "header", "text": "Scrittura (produzione scritta)"}, {"type": "item", "text": "Scrivere messaggi semplici e brevi per presentarsi, per fare gli auguri, per ringraziare o invitare qualcuno, per chiedere o dare notizie, per fornire brevi descrizioni di persone, luoghi e avvenimenti, ecc."}, {"type": "header", "text": "Riflessione-metacognizione sulla lingua e sull’apprendimento"}, {"type": "item", "text": "Osservare coppie di parole simili come suono, distinguendone il significato."}, {"type": "item", "text": "Osservare parole ed espressioni nei contesti d’uso, cogliendone i rapporti di significato."}, {"type": "item", "text": "Osservare la struttura delle frasi, mettendo in relazione costrutti e intenzioni comunicative."}, {"type": "item", "text": "Riconoscere che cosa si è appreso e cosa si dovrà apprendere."}, {"type": "item", "text": "Acquisire consapevolezza che esistono lingue e culture diverse."}]}, "Storia": {"terza": [{"type": "item", "text": "Descrivere il proprio contesto ambientale. Acquisire familiarità con la realtà del proprio paese, della propria città, del proprio quartiere; comprendere il significato della linea del tempo."}, {"type": "item", "text": "Acquisire familiarità con le caratteristiche della vita pubblica italiana. Enunciare alcuni principi della Costituzione; essere informati circa alcune regole base del governo nazionale e locale."}, {"type": "item", "text": "Acquisire la consapevolezza della profondità del tempo storico. Conoscere l’inizio della vita dell’uomo sulla terra e le prime forme della cultura umana; conoscere per grandi linee lo sviluppo delle civiltà mediterranee e del vicino Oriente."}], "quinta": [{"type": "item", "text": "Comprendere e analizzare i principali eventi storici. Conoscere i principali fatti storici, le loro specificità e le loro differenze in relazione alla realtà italiana ed europea."}, {"type": "item", "text": "Esporre i fatti storici. Collocare sulle relative carte geostoriche gli avvenimenti salienti dei vari periodi, con le loro date."}, {"type": "item", "text": "Analizzare i documenti storici. Illustrare il valore dei documenti storici proposti dall’insegnante."}, {"type": "item", "text": "Riconoscere le tracce del passato. Riconoscere i segni del passato nel proprio contesto urbano e paesistico."}]}, "Geografia": {"terza": [{"type": "header", "text": "Orientamento"}, {"type": "item", "text": "Conoscere le funzioni e le regole d’uso degli spazi scolastici al fine di orientarsi con sicurezza e autonomia al proprio interno."}, {"type": "item", "text": "Descrivere percorsi e posizioni, riconoscere punti cardinali tramite l’osservazione (sole e ombre) e l’uso della bussola."}, {"type": "item", "text": "Orientarsi nello spazio noto utilizzando punti di riferimento personali e comunicando i percorsi verbalmente o attraverso il disegno di semplici carte soggettive."}, {"type": "header", "text": "Linguaggio"}, {"type": "item", "text": "Conoscere e utilizzare i concetti per descrivere i principali caratteri fisici e antropici del proprio territorio e dei paesaggi italiani"}, {"type": "item", "text": "Descrivere e rappresentare luoghi noti (gli spazi della scuola, del quartiere) attraverso disegni, descrizioni e cartografie, utilizzando operatori topologici."}, {"type": "item", "text": "Iniziare la lettura di carte geografiche con legenda alla scala locale e italiana."}, {"type": "header", "text": "Paesaggio e territorio"}, {"type": "item", "text": "Conoscere i principali elementi della geografia fisica italiana (fiumi, mari, monti, laghi,…) e saperli opportunamente collocare su una carta geografica."}, {"type": "item", "text": "Conoscere e comprendere in modo intuitivo i concetti di paesaggio e territorio."}, {"type": "item", "text": "Identificare elementi fisici e antropici di paesaggi e territori, - es. i 60 siti Unesco presenti su tutto il territorio italiano - individuando le trasformazioni dell’ambiente dovute alle attività umane."}, {"type": "header", "text": "Relazioni e dinamiche"}, {"type": "item", "text": "Sviluppare il senso del luogo: fare esperienza della dimensione sociale e culturale dei luoghi e dei paesaggi, riconoscendo il legame emozionale e il proprio vissuto personale."}, {"type": "item", "text": "Osservare in un territorio le relazioni tra comunità umane e ambiente (es. rapporto con animali, boschi, fiumi, mari, vulcani,...), anche distinguendo situazioni positive, rischi e criticità."}, {"type": "item", "text": "Riconoscere il ruolo degli spazi nella vita sociale: comprendere come gli spazi influiscano sulla convivenza e sulla realizzazione di progetti individuali e collettivi."}, {"type": "item", "text": "Conoscere, comprendere e rispettare le funzioni e le norme d’uso di luoghi pubblici e scolastici per una corretta convivenza sociale."}, {"type": "header", "text": "Organizzazione territoriale"}, {"type": "item", "text": "Sapere opportunamente localizzare su una carta geografica le Regioni italiane e le principali città italiane."}, {"type": "item", "text": "Riconoscere e descrivere ambienti e paesaggi caratteristici del proprio territorio e dell’Italia."}, {"type": "item", "text": "Conoscere gli elementi peculiari della penisola italiana e dei territori insulari: articolazione costiera, arco alpino, aree interne, isole e arcipelaghi."}, {"type": "item", "text": "Conoscere la posizione del proprio territorio e dell’Italia in relazione all’Europa e al Mediterraneo."}], "quinta": [{"type": "header", "text": "Orientamento"}, {"type": "item", "text": "Identificare i punti di riferimento per l’orientamento negli spazi esterni alla scuola."}, {"type": "item", "text": "Conoscere la cartografia: saper leggere simboli, legende, riduzioni in scala per localizzare elementi fisici e antropici su planisferi e carte regionali."}, {"type": "item", "text": "Possedere una mappa mentale del pianeta, localizzando le più rilevanti forme fisiche e umane e anche alcuni aspetti legati alle diversità culturali e sociali."}, {"type": "header", "text": "Linguaggio"}, {"type": "item", "text": "Conoscere, designare e descrivere attraverso immagini le forme dello spazio geografico (es. montagna, pianura, isola, mare, catena montuosa, città, campagna)."}, {"type": "item", "text": "Conoscere e utilizzare in modo appropriato i concetti più generali che consentono di ragionare e interpretare lo spazio geografico come regione, territorio, paesaggio, scala, luogo, confine, distanza."}, {"type": "header", "text": "Paesaggio e territorio"}, {"type": "item", "text": "Conoscere i principali elementi della geografia fisica europea e mondiale (fiumi, mari, monti, laghi,…) e saperli opportunamente collocare su una carta geografica."}, {"type": "item", "text": "Conoscere e distinguere tra punti di forza (sviluppo economico e sociale) e punti di debolezza (criticità, rischio) di un territorio, considerandolo anche come spazio di opportunità per i progetti di vita personali e sociali."}, {"type": "item", "text": "Sviluppare ragionamenti sul cambiamento e la trasformazione del paesaggio nel tempo, anche come progettualità per il futuro delle comunità che vi abitano."}, {"type": "header", "text": "Relazioni e dinamiche"}, {"type": "item", "text": "Riflettere sui legami tra ambiente e affetti: riflettere sui legami affettivi che collegano le persone agli spazi vissuti, esprimendo le emozioni attraverso disegni che rappresentano quanto rilevato."}, {"type": "item", "text": "Conoscere gli effetti del cambiamento climatico, con particolare attenzione all’ambiente e al territorio italiano, per poi considerarli su scala globale."}, {"type": "item", "text": "Conoscere i principali aspetti della popolazione italiana, compreso il fenomeno migratorio, con particolare attenzione al contesto locale e italiano."}, {"type": "header", "text": "Organizzazione territoriale"}, {"type": "item", "text": "Sapere opportunamente localizzare su una carta geografica gli Stati europei e del mondo e le principali città."}, {"type": "item", "text": "Conoscere e inferire informazioni geografiche: gli aspetti principali di un continente, uno stato o una regione utilizzando fonti diverse."}, {"type": "item", "text": "Localizzare e descrivere aspetti fisici, antropici e culturali del proprio territorio, dell’Italia e, in modo semplificato e generale, dell’Europa e del mondo."}]}, "Matematica": {"terza": [{"type": "header", "text": "Numeri"}, {"type": "item", "text": "Contare oggetti o eventi a voce e mentalmente, per mezzo di segni e mentalmente, in modo progressivo e regressivo; leggere e scrivere i numeri naturali, riconoscendo i due aspetti cardinale e ordinale. Leggere e scrivere numeri razionali in notazione decimale, avendo consapevolezza della notazione posizionale."}, {"type": "item", "text": "Confrontare, ordinare e rappresentare i numeri naturali sulla retta."}, {"type": "item", "text": "Eseguire semplici addizioni, sottrazioni e moltiplicazioni con i numeri naturali, verbalizzare le procedure di calcolo e argomentare per giustificarle."}, {"type": "item", "text": "Eseguire semplici addizioni e sottrazioni con i numeri decimali in contesti reali (ad esempio monete, misure). Conoscere le tabelline della moltiplicazione dei numeri fino a dieci."}, {"type": "header", "text": "Spazio e figure"}, {"type": "item", "text": "Eseguire e descrivere un semplice percorso partendo dalla descrizione verbale o dal disegno e fornire istruzioni per far compiere un percorso desiderato."}, {"type": "item", "text": "Riconoscere, denominare e descrivere le principali figure geometriche secondo determinate caratteristiche (ad esempio numero di lati, ampiezza degli angoli, simmetrie…)."}, {"type": "item", "text": "Disegnare figure geometriche e costruire modelli materiali che rappresentano oggetti matematici sia del piano sia dello spazio. Misurare lunghezze, superfici con opportuni strumenti di misura e usando unità di misura standardizzate e non."}, {"type": "header", "text": "Relazioni, dati e previsioni"}, {"type": "item", "text": "Classificare numeri, figure e oggetti in base alle proprietà e ricorrendo a rappresentazioni opportune a seconda del contesto."}, {"type": "item", "text": "Misurare grandezze (lunghezze, tempo, ecc.) utilizzando diversi strumenti e unità di misura."}, {"type": "header", "text": "Per Informatica:"}, {"type": "item", "text": "Scegliere ed utilizzare oggetti o simboli per rappresentare informazioni. Descrivere a parole attività della vita quotidiana tramite sequenze di passi precisi e non ambigui e saperle eseguire."}, {"type": "item", "text": "Scrivere semplici programmi e verificare, mediante la loro esecuzione, se svolgono il compito previsto ed eventualmente correggerli."}], "quinta": [{"type": "note", "text": "Nella classe quinta lo sviluppo del pensiero logico e dei processi di astrazione si rafforza grazie alla particolare plasticità mentale tipica di questa fascia d’età. Gli alunni consoli- dano i concetti appresi nei primi anni della scuola primaria e sono pronti ad affrontare contenuti più complessi, usando un linguaggio matematico, scientifico e tecnico sempre più preciso. Durante gli ultimi due anni della scuola primaria, i bambini approfondiscono e rielaborano le conoscenze matematiche acquisite, integrandole con nuove idee e stru- menti, sviluppano strategie di problem solving, imparando a leggere, comprendere e risolvere problemi anche in contesti non noti; argomentano il proprio pensiero spiegan- do il perché delle proprie scelte, confrontando soluzioni diverse e collaborando con i compagni. Hanno sempre più occasioni per porre domande, formulare ipotesi e costru- ire problemi in autonomia, diventando soggetti attivi nell’apprendimento ed esercitano il ragionamento logico."}, {"type": "header", "text": "Numeri"}, {"type": "item", "text": "Leggere, scrivere e confrontare numeri decimali, dimostrando di conoscere il ruolo della posizione delle cifre nella notazione posizionale. Eseguire le quattro operazioni con sicurezza valutando l’opportunità di ricorrere al calcolo mentale, scritto o con la calcolatrice."}, {"type": "item", "text": "Utilizzare il concetto di ordine di grandezza per caratterizzare i numeri in notazione decimale in diversi contesti (es. lunghezze, pesi, temperature)."}, {"type": "item", "text": "Eseguire la divisione con resto fra numeri naturali e individuare multipli e divisori di un numero. Stimare il risultato di un’operazione e riconoscere i contesti in cui è appropriato effettuare una stima."}, {"type": "item", "text": "Operare con le frazioni e riconoscere frazioni equivalenti. Utilizzare numeri decimali, frazioni e percentuali per descrivere situazioni quotidiane. Impiegare i numeri interi negativi in contesti concreti."}, {"type": "item", "text": "Rappresentare i numeri sulla retta e utilizzare scale graduate in contesti significativi per le scienze e per la tecnica. Riconoscere sistemi di notazione dei numeri (non solo posizionali) che sono o sono stati in uso in differenti luoghi, tempi e culture."}, {"type": "header", "text": "Spazio e figure"}, {"type": "item", "text": "Descrivere e classificare figure geometriche individuando elementi significativi e simmetrie, anche al fine di farle riprodurre ad altri. Riprodurre una figura in base ad una descrizione utilizzando strumenti opportuni (carta a quadretti, spago, corde, riga, squadra, compasso, goniometro, software, ...)."}, {"type": "item", "text": "Utilizzare il piano cartesiano per localizzare punti e rappresentare segmenti e figure geometriche."}, {"type": "item", "text": "Riconoscere figure ruotate, traslate e riflesse, identificando varianti e invarianti. Confrontare e misurare angoli utilizzando proprietà e strumenti opportuni. Utilizzare e distinguere i concetti di parallelismo, perpendicolarità, orizzontalità e verticalità. Riprodurre in scala una figura assegnata con strumenti opportuni. Calcolare il perimetro di una figura usando le formule o altri procedimenti."}, {"type": "item", "text": "Calcolare l’area di rettangoli, triangoli e di altre figure per scomposizione o utilizzando le più comuni formule. Riconoscere rappresentazioni piane di oggetti tridimensionali individuando differenti punti di vista del medesimo oggetto (dall’alto, di fronte, …)."}, {"type": "header", "text": "Relazioni, dati e previsioni."}, {"type": "item", "text": "Rappresentare relazioni e dati utilizzando, in situazioni significative, diverse rappresentazioni (tabelle, grafici, ecc.) per ricavare informazioni e dati, formulare giudizi e prendere decisioni. Usare le nozioni di frequenza, moda, mediana e media aritmetica."}, {"type": "item", "text": "Utilizzare le principali unità di misura per lunghezze, angoli, aree, volumi/capacità, intervalli temporali, masse, pesi per effettuare misure e stime. Passare da un’unità di misura a un’altra, limitatamente alle unità di uso più comune, anche nel contesto del sistema monetario."}, {"type": "item", "text": "In situazioni concrete, riconoscere se un evento è possibile, impossibile o certo. Data una coppia di eventi, ipotizzare quale sia il più probabile, dando una prima quantificazione nei casi più semplici, e oppure riconoscere se si tratta di eventi ugualmente probabili. Riconoscere e descrivere regolarità in una sequenza di numeri o di figure."}, {"type": "header", "text": "Per Informatica:"}, {"type": "item", "text": "Scrivere brevi programmi con un elementare linguaggio di programmazione didattica con istruzioni di reazione ad eventi, e selezione (con condizione elementare) e ripetizione."}, {"type": "item", "text": "Scegliere combinazioni di simboli per rappresentare dati strutturati. Tradurre un algoritmo in un programma ed esaminarne il comportamento anche al fine di correggerlo."}]}, "Scienze": {"terza": [{"type": "header", "text": "Esplorazione e osservazione della natura"}, {"type": "item", "text": "Osservare direttamente minerali, fossili, rocce, piante, funghi, animali e microorganismi, raccogliendo campioni, e utilizzando, ove disponibili, adeguati strumenti di indagine, per descriverne le caratteristiche e classificarli in base a criteri come forma, colore, struttura e habitat."}, {"type": "item", "text": "Osservare il susseguirsi delle stagioni realizzando registrazioni periodiche dei cambiamenti nelle piante, nelle temperature, nella posizione del sole rispetto all’orizzonte locale in vari momenti della giornata."}, {"type": "item", "text": "Osservare il movimento apparente del sole lungo l’arco della giornata attraverso l’ombra prodotta da un albero o da un bastone piantato nel terreno e utilizzare il cambiamento dell’ombra come strumento per misurare lo scorrere del tempo."}, {"type": "header", "text": "Materia e trasformazioni"}, {"type": "item", "text": "Identificare e classificare oggetti e materiali in base alle loro proprietà percepite (colore, forma, durezza, trasparenza, ecc.)."}, {"type": "item", "text": "Sperimentare la conservazione della quantità di materia per deformazione e per cambiamenti di stato (es. fusione del ghiaccio) e registrare le osservazioni attraverso disegni o tabelle."}, {"type": "header", "text": "Esperimenti sui fenomeni fisici"}, {"type": "item", "text": "Sperimentare diversi tipi di moto e situazioni di equilibrio degli oggetti su piani orizzontali e inclinati e confrontare mediante un dinamometro la forza necessaria per sollevare verticalmente un oggetto o per spostarlo lungo un piano orizzontale."}, {"type": "item", "text": "Effettuare misure dirette di volume di liquidi e misure indirette del volume di oggetti solidi immersi in liquidi."}, {"type": "item", "text": "Osservare e descrivere il comportamento delle calamite su diversi materiali, riconoscendo le proprietà di attrazione e repulsione e di orientamento nello spazio."}, {"type": "item", "text": "Comprendere che il suono non è materia ma è il risultato di una vibrazione che si trasmette attraverso la materia, sperimentando la vibrazione delle corde di uno strumento musicale, parlando vicino a un palloncino gonfio o utilizzando diapason e bicchieri d’acqua per osservare come le vibrazioni producono suoni diversi."}, {"type": "item", "text": "Riconoscere la propagazione rettilinea della luce anche attraverso l’osservazione delle proprietà delle ombre."}, {"type": "header", "text": "Esseri viventi e corpo umano"}, {"type": "item", "text": "Riconoscere le principali caratteristiche dei viventi e le loro diverse modalità di vita."}, {"type": "item", "text": "Descrivere le sensazioni corporee fondamentali (fame, sete, dolore, movimento, caldo, freddo) per riconoscere la complessità del proprio organismo e comprenderne il funzionamento."}, {"type": "item", "text": "Riconoscere le parti principali del corpo umano, nei suoi diversi organi e apparati, con particolare attenzione agli organi di senso e alla loro funzione nella percezione dell’ambiente."}, {"type": "item", "text": "Sviluppare abitudini alimentari e stili di vita sani e rispettosi della propria salute."}, {"type": "header", "text": "Scienza e ambiente"}, {"type": "item", "text": "Riflettere su come le proprie azioni influenzano l’ambiente, riconoscendo l’importanza di comportamenti responsabili a scuola e nella natura per la tutela degli ecosistemi."}], "quinta": [{"type": "header", "text": "Esplorazione e osservazione della natura"}, {"type": "item", "text": "Saper osservare con attenzione ciò che ci circonda, ponendosi domande su ciò che accade in natura e nei fenomeni della vita quotidiana (in casa e a scuola)."}, {"type": "item", "text": "Formulare ipotesi e cercare spiegazioni alle proprie osservazioni attraverso esperimenti, confronti e raccolta di informazioni."}, {"type": "item", "text": "Utilizzare strumenti per effettuare esperimenti e raccogliere dati, come cronometri, termometri, bilance, e microscopi."}, {"type": "item", "text": "Riconoscere le interazioni tra gli esseri viventi e l’ambiente, ad esempio osservando come le piante crescono in diversi tipi di suolo o come gli animali modificano il loro comportamento in base alle stagioni."}, {"type": "item", "text": "Imparare a osservare e descrivere le caratteristiche di piante, funghi, animali e fossili, ad esempio studiando foglie, semi e fiori con una lente d’ingrandimento o confrontando scheletri e dentature di animali per dedurre la loro dieta."}, {"type": "item", "text": "Saper dare semplici spiegazioni legate all’osservazione di piante, funghi, animali, minerali, fossili e rocce, registrando cambiamenti nel tempo attraverso schede di osservazione o grafici."}, {"type": "item", "text": "Imparare ad esplorare la struttura del suolo sperimentando con minerali, rocce, e viventi; osservare le caratteristiche dell’acqua e il suo ruolo nell’ambiente attraverso il ciclo dell’acqua."}, {"type": "item", "text": "Rilevare le variazioni del tempo meteorologico attraverso la misurazione della temperatura, dell’umidità e della pressione atmosferica con strumenti come termometri, barometri e igrometri. Creare un diario meteorologico per documentare i cambiamenti nel tempo."}, {"type": "item", "text": "Osservare e comprendere i movimenti del Sole e della Luna nel cielo, lungo l’arco della giornata e dell’anno, e la loro relazione con fenomeni come l’alternanza del dì e della notte e il ciclo delle fasi lunari, anche attraverso semplici modelli e strumenti didattici."}, {"type": "header", "text": "Materia e trasformazioni"}, {"type": "item", "text": "Attraverso semplici esperienze, imparare ad elaborare una prima distinzione macroscopica fra sostanze, soluzioni e miscugli eterogenei."}, {"type": "item", "text": "Classificare oggetti e materiali in base alla loro provenienza (naturale o artificiale), mettendo in rilievo le proprietà e gli aspetti che li accomunano."}, {"type": "item", "text": "Riconoscere e classificare materiali in base alle loro proprietà funzionali, come la durezza (graffiandoli con altri materiali), o la conducibilità termica (verificando come si scaldano a contatto con una fonte di calore), mettendo in relazione le proprietà del materiale con il suo utilizzo."}, {"type": "item", "text": "Osservare e descrivere il fenomeno della combustione attraverso esperimenti sicuri e simulazioni, iniziando a comprendere il ruolo dell’aria e il consumo del materiale combustibile."}, {"type": "item", "text": "Riconoscere, descrivere ed elaborare i primi concetti relativamente agli stati di aggregazione della materia e ai passaggi di stato, osservandone i cambiamenti in situazioni concrete e sviluppando una prima comprensione a livello macroscopico."}, {"type": "item", "text": "Riconoscere, descrivere ed elaborare i primi concetti relativamente ad alcuni esempi di trasformazioni chimiche, osservandole in situazioni concrete e sviluppando una prima comprensione a livello macroscopico."}, {"type": "item", "text": "Differenziare il concetto di peso e quello di densità attraverso esperienze sul galleggiamento (immersione in acqua di oggetti leggeri e quindi poco pesanti, che affondano, e viceversa, di oggetti pesanti che galleggiano), avviare la costruzione del concetto di pressione attraverso esperimenti con i fluidi (es. barattoli pieni d’aria affondati in acqua e siringhe senza ago tappate)."}, {"type": "item", "text": "Sperimentare alcune proprietà dell’aria, quali l’occupare spazio, l’avere un peso, la capacità di trasmettere forze e così via."}, {"type": "item", "text": "Acquisire il concetto di equilibrio termico (ad esempio attraverso attività dove si raggiunga l’equilibrio termico nel contatto tra sostanze solide o fluide)."}, {"type": "item", "text": "Esplorazione sensoriale dei fenomeni fisici."}, {"type": "item", "text": "Esplorare e osservare il movimento di persone e oggetti, ragionando sui cambiamenti della posizione nel tempo e sui concetti di velocità e accelerazione, e sperimentando le oscillazioni e il moto armonico."}, {"type": "item", "text": "Effettuare misure di massa, nel senso di quantità di materia, attraverso bilance a due bracci costruite con materiali poveri, e di peso, nel senso di forza peso, attraverso semplici dinamometri a molla."}, {"type": "item", "text": "Osservare e comprendere i fenomeni legati alla gravità, all’elettricità e al magnetismo, riconoscendo le principali caratteristiche di ciascuna forza e le differenze tra interazione elettrica e magnetica."}, {"type": "item", "text": "Riconoscere e comprendere le relazioni tra temperatura, suoni e luce, collegandole alle percezioni sensoriali e ai fenomeni fisici come la riflessione, la rifrazione e la scomposizione della luce."}, {"type": "item", "text": "Iniziare a comprendere i concetti di forza ed energia, riconoscendoli e applicandoli in diverse situazioni e fenomeni osservati."}, {"type": "header", "text": "L’uomo, i viventi e l’ambiente"}, {"type": "item", "text": "Descrivere e interpretare il funzionamento del corpo umano, per esempio, misurando il battito cardiaco prima e dopo l’esercizio fisico per comprendere il funzionamento del sistema circolatorio o studiando la digestione con esperimenti sulla dissoluzione di cibi in liquidi diversi."}, {"type": "item", "text": "Riconoscere l’organizzazione cellulare di organi e apparati."}, {"type": "item", "text": "Acquisire le prime informazioni sulle funzioni riproduttive."}, {"type": "item", "text": "Conoscere gli elementi fondamentali e gli apparati del corpo umano, compresi gli apparati sessuali."}, {"type": "item", "text": "Osservare e descrivere le caratteristiche principali di piante, funghi e animali, come forma, colore, struttura e adattamenti all’ambiente. Confrontare i loro modi di vivere, studiando alimentazione, crescita, riproduzione e habitat."}, {"type": "item", "text": "Riconoscere l’esistenza di forme di vita microscopica, ad esempio a partire dall’osservazione di campioni di suolo sia ad occhio nudo che con strumenti di ingrandimento come lenti e stereomicroscopi."}, {"type": "item", "text": "Elaborare i primi elementi di classificazione animale e vegetale sulla base di osservazioni personali."}, {"type": "item", "text": "Avere cura della propria salute, anche dal punto di vista alimentare e motorio."}, {"type": "header", "text": "Interconnessioni tra scienza, arte e società"}, {"type": "item", "text": "Riconoscere i collegamenti tra scienza, matematica, arte e musica, ad esempio analizzando le simmetrie nei cristalli di neve, identificando le proprietà delle vibrazioni che corrispondono alle caratteristiche dei suoni, o sperimentando la pittura con pigmenti naturali."}, {"type": "item", "text": "Riconoscere il ruolo della scienza nella società, approfondendo le invenzioni scientifiche che hanno cambiato la storia (come la scoperta dell’elettricità o la teoria dell’evoluzione) e discutendo come la scienza influisce su tecnologia, medicina e ambiente."}]}, "Tecnologia": {"terza": [{"type": "header", "text": "Vedere e osservare"}, {"type": "item", "text": "Osservare e classificare elementi artificiali presenti nell’ambiente scolastico e urbano."}, {"type": "item", "text": "Descrivere e rappresentare (attraverso disegni, schemi o modellini) semplici processi di trasformazione dell’energia e dei materiali, riflettendo sugli effetti ambientali di tali trasformazioni."}, {"type": "header", "text": "Prevedere e immaginare"}, {"type": "item", "text": "Ideare e costruire semplici modelli, descrivendo le fasi di realizzazione."}, {"type": "item", "text": "Misurare grandezze ambientali (lunghezze, temperatura, luce) con strumenti semplici e registrare i dati."}, {"type": "header", "text": "Intervenire e trasformare"}, {"type": "item", "text": "Effettuare prove e esperienze sulle proprietà dei materiali più comuni."}, {"type": "item", "text": "Eseguire interventi di decorazione, riparazione e manutenzione del proprio corredo scolastico."}, {"type": "header", "text": "Per Informatica:"}, {"type": "item", "text": "Riconoscere la presenza delle tecnologie informatiche nella vita comune, comprendendo l’importanza di usarle rispettando gli altri e proteggendo i dati personali, sapendo identificare figure adulte di riferimento a cui rivolgersi in caso di situazioni problematiche."}, {"type": "item", "text": "Creare, selezionare e usare semplici testi o disegni, usando strumenti informatici."}], "quinta": [{"type": "header", "text": "Vedere e osservare"}, {"type": "item", "text": "Conoscere e spiegare il funzionamento di semplici dispositivi tecnologici."}, {"type": "item", "text": "Leggere e interpretare le informazioni essenziali contenute su etichette, schede tecniche o materiali promozionali relativi a beni e dispositivi tecnologici di uso comune."}, {"type": "item", "text": "Riconoscere e identificare nell’ambiente elementi e fenomeni di tipo artificiale."}, {"type": "header", "text": "Prevedere e immaginare"}, {"type": "item", "text": "Pianificare la fabbricazione di un semplice oggetto elencando gli strumenti e i materiali necessari."}, {"type": "item", "text": "Effettuare stime approssimative su pesi o misure di oggetti dell’ambiente scolastico."}, {"type": "item", "text": "Collaborare efficacemente in gruppo, contribuendo attivamente a progetti comuni."}, {"type": "header", "text": "Intervenire e trasformare"}, {"type": "item", "text": "Produrre semplici modelli o rappresentazioni grafiche del proprio operato utilizzando elementi del disegno tecnico o strumenti multimediali."}, {"type": "item", "text": "Rappresentare i dati dell’osservazione attraverso tabelle, mappe, diagrammi, disegni, testi."}, {"type": "item", "text": "Smontare semplici oggetti e meccanismi, apparecchiature obsolete o altri dispositivi comuni."}, {"type": "header", "text": "Informatica:"}, {"type": "item", "text": "Conoscere le principali componenti hardware e software dei dispositivi usati, distinguendo tra rete di comunicazione e servizi forniti."}, {"type": "item", "text": "Comprendere l’importanza della protezione dei dati personali, saper usare correttamente le tecnologie informatiche in relazione agli altri e sapere a chi rivolgersi in caso di situazioni problematiche online."}, {"type": "item", "text": "Creare semplici contenuti e applicazioni informatiche a fini espressivi usando ambienti adatti e modificando o combinando quanto già disponibile."}]}, "Musica": {"terza": [{"type": "header", "text": "Percezione, ascolto e analisi"}, {"type": "item", "text": "Ascoltare e riconoscere suoni diversi."}, {"type": "item", "text": "Riconoscere e descrivere le caratteristiche dei suoni (altezza, intensità, durata, timbro)."}, {"type": "item", "text": "Ascoltare attivamente brani musicali e riconoscerne le principali proprietà e strutture."}, {"type": "header", "text": "Alfabetizzazione e grammatica musicale"}, {"type": "item", "text": "Introdurre prime forme di rappresentazione grafica della musica (partiture grafiche, notazioni analogiche e spontanee)."}, {"type": "header", "text": "Creatività, esecuzione e interpretazione"}, {"type": "item", "text": "Creare semplici ritmi con voce, corpo e strumenti."}, {"type": "item", "text": "Partecipare al canto corale e a semplici attività di musica d’insieme."}, {"type": "header", "text": "Ritmo, movimento ed espressione corporea"}, {"type": "item", "text": "Seguire il ritmo con il movimento del corpo."}], "quinta": [{"type": "header", "text": "Percezione, ascolto e analisi"}, {"type": "item", "text": "Individuare le proprietà dei paesaggi sonori."}, {"type": "item", "text": "Ascoltare e classificare i parametri musicali."}, {"type": "item", "text": "Analizzare semplici strutture musicali."}, {"type": "header", "text": "Alfabetizzazione e grammatica musicale"}, {"type": "item", "text": "Riconoscere, comprendere e applicare i principali simboli della notazione musicale."}, {"type": "item", "text": "Utilizzare un linguaggio appropriato per descrivere le caratteristiche della musica."}, {"type": "header", "text": "Creatività, esecuzione e interpretazione"}, {"type": "item", "text": "Creare improvvisazioni e inventare semplici melodie e ritmi."}, {"type": "item", "text": "Conoscenza storico-culturale della musica"}, {"type": "item", "text": "Conoscere e classificare i principali strumenti musicali delle diverse epoche."}, {"type": "item", "text": "Conoscere i principali musicisti e compositori attraverso l’ascolto guidato delle opere."}]}, "Arte e immagine": {"terza": [{"type": "header", "text": "Espressività/Produzione"}, {"type": "item", "text": "Sperimentare la calligrafia di base (es. corsivo italiano) attraverso esercizi di motricità fine (es. tracciamento di lettere singole con pennarelli a punta calligrafica), per sviluppare un segno fluido e leggibile, integrando semplici motivi decorativi ispirati al patrimonio locale o a tradizioni diverse."}, {"type": "item", "text": "Sperimentare tecniche di base (es. pastelli, tempera, collage) e materiali plastici (es. pasta di sale, plastiline) per creare piccoli elaborati."}, {"type": "item", "text": "Disegnare forme semplici umane, animali, vegetali ed architettoniche (es. archi, colonne), anche fantastiche, per rappresentare oggetti o storie, con tratti definiti."}, {"type": "item", "text": "Esercitare abilità manuali di base, come l’impugnatura della matita, per tracciare segni chiari e leggibili, in contesti inclusivi."}, {"type": "item", "text": "Creare elaborati ispirandosi a opere artistiche locali, per coltivare la propria originalità attraverso tecniche semplici promuovendo consapevolezza storica ed identitaria."}, {"type": "item", "text": "Assemblare o integrare negli elaborati piccoli oggetti, anche personali, per realizzare composizioni estetiche o narrative, descrittive o fantastiche."}, {"type": "item", "text": "Utilizzare app di disegno accessibili o fotocamere di tablet per creare immagini statiche, animazioni in stop-motion o brevi video, integrando materiali analogici (es. disegni, modellazioni) per progetti narrativi che reinterpretano opere d’arte o patrimoni locali."}, {"type": "header", "text": "Comunicazione"}, {"type": "item", "text": "Usare colori, linee, forme e materiali per esprimere emozioni, idee personali e racconti, anche ispirandosi a immagini e registri espressivi desunti dall’arte, promuovendo così l’originalità dell’espressione personale."}, {"type": "header", "text": "Osservazione/Lettura"}, {"type": "item", "text": "Riconoscere semplici testi visivi e audiovisivi (es. dipinti, illustrazioni, cartoni animati), descrivendone gli elementi compositivi e formali principali (es. colori, forme, effetti di luce e ombra) e il contesto di base (es. cosa rappresentano, chi li ha creati), individuandone il codice comunicativo essenziale (es. colori per emozioni, forme per azioni)."}, {"type": "item", "text": "Osservare un semplice oggetto illuminato da una singola fonte di luce (es. lampadina, sole) individuandone le principali ombre proprie e portate (riferendosi ad esempio al sole presente nel disegno spontaneo per introdurre alla percezione visiva del chiaroscuro)."}, {"type": "item", "text": "Analizzare un dipinto, un’illustrazione o un cartone animato per descriverne elementi, colori e forme, individuandone il contesto espressivo e narrativo."}, {"type": "header", "text": "Analisi/Interpretazione/Comprensione"}, {"type": "item", "text": "Identificare opere o oggetti artistici e artigianali del proprio ambiente o di altre culture, nominandone le caratteristiche principali."}], "quinta": [{"type": "header", "text": "Espressività/Produzione"}, {"type": "item", "text": "Creare brevi testi in corsivo italiano (es. poesie, proverbi) con accenti estetici, utilizzando tecniche miste (es. acquerello, collage) e strumenti digitali (es. app di disegno), per esprimere narrazioni ed emozioni, valorizzando il confronto con calligrafie di altre culture."}, {"type": "item", "text": "Usare il disegno (es. schizzi a matita per rappresentare un oggetto reale), la modellazione (es. creare una forma con argilla, seguendo un modello semplice) e la fotografia (es. scattare una foto con tablet e modificarla con un’app gratuita) per rappresentare il reale o il fantastico in modo personale (realistico o simbolico); utilizzare strumenti digitali accessibili (es. app per foto e video) per creare immagini statiche o in movimento, anche riutilizzando o assemblando materiali figurativi esistenti."}, {"type": "item", "text": "Applicare tecniche grafiche, pittoriche, plastiche e l’uso di strumenti digitali accessibili per elaborati creativi usando il chiaroscuro per rappresentare ombre proprie e portate, definendo la linea del contorno nel disegno e applicando il colore degradante nella pittura, dimostrando consapevolezza formale."}, {"type": "item", "text": "Introdurre prospettiva semplice (es. piani di profondità, sovrapposizioni) e chiaroscuro di base per volumi."}, {"type": "item", "text": "Sperimentare motivi decorativi (es. ispirati a Kandinsky, Depero) per dettagli strutturati negli elaborati, in laboratori inclusivi."}, {"type": "item", "text": "Creare elaborati (es. un disegno, un collage o una composizione plastica o oggettuale) ispirato a opere locali (es. un dipinto o un fregio decorativo locale) per esprimere emozioni, idee o racconti, anche attraverso tecniche miste."}, {"type": "header", "text": "Comunicazione"}, {"type": "item", "text": "Integrare simboli e metafore nel proprio linguaggio visivo, anche ispirandosi all’arte vista (es. arte surrealista o fantastica), rafforzando narrativamente l’identità personale."}, {"type": "header", "text": "Osservazione/Lettura"}, {"type": "item", "text": "Osservare e saper commentare testi visivi (es. dipinti, video), individuandone significati di base (es. emozioni) e aspetti formali (es. equilibrio, ritmo), individuando e sapendo usare il codice comunicativo (es. linee morbide per fluidità, inquadrature per narrazione)."}, {"type": "item", "text": "Esplorare e comprendere semplici contesti delle opere (es. chi le ha create, in che periodo), collegandone gli elementi al proprio vissuto."}, {"type": "item", "text": "Riconoscere luci e ombre base, nelle immagini osservate; comprendere le regole grammaticali e sintattiche di base del linguaggio audiovisivo (es. inquadrature, montaggio, elementi sonori e musicali)."}, {"type": "item", "text": "Commentare un’opera (es. un dipinto rinascimentale o una sequenza filmica) per individuarne il contesto storico-culturale."}, {"type": "header", "text": "Analisi/Interpretazione/Comprensione"}, {"type": "item", "text": "Collegare opere del proprio territorio a temi di altre culture, con semplici confronti, dimostrando elementari capacità interpretative."}]}, "Educazione fisica": {"terza": [{"type": "header", "text": "Dimensione degli stili di vita attivi e sani:"}, {"type": "item", "text": "Partecipare alle differenti tipologie di attività motoria proposte."}, {"type": "item", "text": "Utilizzare in modo attivo i tempi scolastici dedicati alla ricreazione, alle pause e alle situazioni in cui è possibile muoversi."}, {"type": "header", "text": "Dimensione motoria:"}, {"type": "item", "text": "Acquisire le abilità motorie fondamentali."}, {"type": "item", "text": "Esercitare abilità ed elementari tattiche praticabili nelle attività di gioco."}, {"type": "item", "text": "Assumere progressiva consapevolezza delle modalità espressive e comunicative del corpo."}, {"type": "header", "text": "Dimensione cognitiva:"}, {"type": "item", "text": "Comprendere, ricordare e rispettare le regole delle attività proposte."}, {"type": "item", "text": "Strutturare una relazione positiva con l’ambiente di apprendimento."}, {"type": "item", "text": "Mettere in pratica i principì di una sana alimentazione."}, {"type": "header", "text": "Dimensione sociale:"}, {"type": "item", "text": "Interagire in maniera collaborativa e rispettosa con tutti i compagni."}, {"type": "header", "text": "Dimensione emotivo-relazionale:"}, {"type": "item", "text": "Manifestare e modulare le proprie emozioni."}, {"type": "item", "text": "Mostrare empatia per compagne e compagni."}], "quinta": [{"type": "header", "text": "Dimensione degli stili di vita attivi e sani:"}, {"type": "item", "text": "Partecipare attivamente alle differenti tipologie di attività motorie e sportive proposte."}, {"type": "item", "text": "Utilizzare in modo attivo e costante i tempi scolastici dedicati alla ricreazione, alle pause e alle situazioni in cui è possibile muoversi anche nel percorso casa-scuola- casa."}, {"type": "header", "text": "Dimensione motoria:"}, {"type": "item", "text": "Organizzare movimenti finalizzati e precisi."}, {"type": "item", "text": "Esercitare specifiche abilità e tattiche motorie praticabili nelle attività di gioco e sportive."}, {"type": "item", "text": "Affinare le modalità espressive e comunicative del corpo."}, {"type": "header", "text": "Dimensione cognitiva:"}, {"type": "item", "text": "Comprendere e applicare le regole e le tattiche di base delle attività proposte."}, {"type": "item", "text": "Riconoscere ed essere in grado di affrontare problemi nelle situazioni di gioco."}, {"type": "item", "text": "Strutturare una relazione costruttiva con l’ambiente di apprendimento."}, {"type": "item", "text": "Conoscere gli elementi base della sicurezza e dell’assistenza nel corso delle attività."}, {"type": "item", "text": "Conoscere i principî dell’igiene, di una sana alimentazione e la relazione con l’attività motoria."}, {"type": "header", "text": "Dimensione sociale:"}, {"type": "item", "text": "Interagire in maniera collaborativa e rispettosa con tutti i compagni valorizzando le diversità."}, {"type": "header", "text": "Dimensione emotivo-relazionale:"}, {"type": "item", "text": "Gestire le proprie emozioni nelle situazioni di gioco."}, {"type": "item", "text": "Affrontare le eventuali difficoltà negli apprendimenti."}, {"type": "item", "text": "Gli strumenti più adeguati alla valutazione e autovalutazione del conseguimento delle competenze sono rappresentati dall’osservazione finalizzata anche attraverso l’uso di griglie, rubriche valutative, integrate da test, questionari, check list, diari prestando particolare attenzione al processo di apprendimento del singolo."}]}};
+const SUBJECT_ORDER = ["Italiano", "Lingua Inglese", "Storia", "Geografia", "Matematica", "Tecnologia", "Scienze", "Musica", "Arte e immagine", "Educazione fisica"];
+const LABELS = {"Italiano": "Italiano", "Lingua Inglese": "Lingua inglese", "Storia": "Storia", "Geografia": "Geografia", "Matematica": "Matematica", "Tecnologia": "Tecnologia", "Scienze": "Scienze", "Musica": "Musica", "Arte e immagine": "Arte e immagine", "Educazione fisica": "Educazione fisica"};
+
+const subjectsEl = document.getElementById('subjects');
+SUBJECT_ORDER.forEach((key, i) => {
+  const id = 'subj-' + i;
+  const wrap = document.createElement('div');
+  wrap.className = 'chip';
+  wrap.innerHTML =
+    '<input type="checkbox" id="' + id + '" value="' + key + '">' +
+    '<label for="' + id + '"><span class="box"></span>' + LABELS[key] + '</label>';
+  subjectsEl.appendChild(wrap);
+});
+
+const statusEl = document.getElementById('status');
+const genBtn = document.getElementById('generate');
+
+function sanitizeFilename(s){
+  return s
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-zA-Z0-9]+/g, '_')
+    .replace(/^_+|_+$/g, '');
+}
+
+function generateCombinedPdf(selected, classe){
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ unit: 'mm', format: 'a4' });
+  const pageW = doc.internal.pageSize.getWidth();
+  const pageH = doc.internal.pageSize.getHeight();
+  const marginL = 20, marginR = 20, marginTop = 22, marginBottom = 20;
+  const contentW = pageW - marginL - marginR;
+  const lineH = 5.2;
+  let y = marginTop;
+
+  function ensureSpace(needed){
+    if (y + needed > pageH - marginBottom) {
+      doc.addPage();
+      y = marginTop;
+    }
+  }
+
+  function drawCheckbox(topY){
+    const size = 3.4;
+    doc.setDrawColor(90, 100, 110);
+    doc.setLineWidth(0.35);
+    doc.roundedRect(marginL + 1, topY, size, size, 0.6, 0.6, 'S');
+  }
+
+  function renderHeader(entryText){
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(12.5);
+    const lines = doc.splitTextToSize(entryText, contentW);
+    const needed = lines.length * 5.6 + 4.5;
+    ensureSpace(needed + 8);
+    y += 3;
+    doc.setTextColor(31, 93, 80);
+    lines.forEach(line => {
+      doc.text(line, marginL, y);
+      y += 5.6;
+    });
+    doc.setTextColor(0, 0, 0);
+    y += 1.5;
+  }
+
+  function renderNote(entryText){
+    doc.setFont('helvetica', 'italic');
+    doc.setFontSize(9.5);
+    const lines = doc.splitTextToSize(entryText, contentW - 2);
+    ensureSpace(lines.length * 4.6 + 3);
+    doc.setTextColor(100, 100, 100);
+    lines.forEach(line => {
+      doc.text(line, marginL, y);
+      y += 4.6;
+    });
+    doc.setTextColor(0, 0, 0);
+    y += 3;
+  }
+
+  function renderItem(entryText){
+    const textX = marginL + 9.5;
+    const textW = contentW - 9.5;
+
+    const m = entryText.match(/^([A-ZÀ-Ü][^.]{2,60}\.)\s+(.*)$/s);
+    let leadLines = [], bodyLines = [];
+
+    doc.setFontSize(10.5);
+    if (m) {
+      doc.setFont('helvetica', 'bold');
+      leadLines = doc.splitTextToSize(m[1], textW);
+      doc.setFont('helvetica', 'normal');
+      bodyLines = doc.splitTextToSize(m[2], textW);
+    } else {
+      doc.setFont('helvetica', 'normal');
+      bodyLines = doc.splitTextToSize(entryText, textW);
+    }
+
+    const totalLines = leadLines.length + bodyLines.length;
+    const needed = totalLines * lineH + 2.8;
+    ensureSpace(needed);
+
+    drawCheckbox(y - 2.6);
+
+    doc.setFont('helvetica', 'bold');
+    leadLines.forEach(line => {
+      doc.text(line, textX, y);
+      y += lineH;
+    });
+    doc.setFont('helvetica', 'normal');
+    bodyLines.forEach(line => {
+      doc.text(line, textX, y);
+      y += lineH;
+    });
+    y += 2.8;
+  }
+
+  function renderSubjectTitle(subject, classeLabel){
+    doc.setFont('times', 'bold');
+    doc.setFontSize(27);
+    doc.setTextColor(31, 42, 58);
+    const titleLines = doc.splitTextToSize(LABELS[subject], contentW);
+    titleLines.forEach(line => {
+      doc.text(line, marginL, y);
+      y += 10.5;
+    });
+    doc.setTextColor(0, 0, 0);
+
+    doc.setFont('helvetica', 'italic');
+    doc.setFontSize(11.5);
+    doc.setTextColor(80, 90, 100);
+    doc.text('Obiettivi specifici di apprendimento \u2014 al termine della ' + classeLabel, marginL, y + 1);
+    doc.setTextColor(0, 0, 0);
+    y += 7;
+
+    doc.setDrawColor(180, 60, 55);
+    doc.setLineWidth(0.6);
+    doc.line(marginL, y, marginL + contentW, y);
+    y += 9;
+  }
+
+  selected.forEach((subject, idx) => {
+    if (idx > 0) {
+      doc.addPage();
+      y = marginTop;
+    }
+    const classeLabel = classe === 'terza' ? 'classe terza' : 'classe quinta';
+    renderSubjectTitle(subject, classeLabel);
+
+    const items = (OBJECTIVES[subject] && OBJECTIVES[subject][classe]) || [];
+    items.forEach(entry => {
+      if (entry.type === 'header') renderHeader(entry.text);
+      else if (entry.type === 'note') renderNote(entry.text);
+      else renderItem(entry.text);
+    });
+  });
+
+  const totalPages = doc.internal.getNumberOfPages();
+  for (let p = 1; p <= totalPages; p++) {
+    doc.setPage(p);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8);
+    doc.setTextColor(120, 120, 120);
+    doc.text("Indicazioni nazionali 2025 \u2014 D.M. 9 dicembre 2025, n. 221", marginL, pageH - 10);
+    doc.text('Pagina ' + p + ' di ' + totalPages, pageW - marginR, pageH - 10, { align: 'right' });
+  }
+  doc.setTextColor(0, 0, 0);
+
+  let fname;
+  if (selected.length === 1) {
+    fname = 'Obiettivi_' + sanitizeFilename(LABELS[selected[0]]) + '_classe_' + classe + '.pdf';
+  } else {
+    fname = 'Obiettivi_apprendimento_classe_' + classe + '.pdf';
+  }
+  doc.save(fname);
+  return fname;
+}
+
+genBtn.addEventListener('click', () => {
+  const selected = SUBJECT_ORDER.filter(key => {
+    const box = document.querySelector('#subjects input[value="' + key + '"]');
+    return box && box.checked;
+  });
+  const classe = document.querySelector('input[name="classe"]:checked').value;
+
+  statusEl.classList.remove('err');
+  if (selected.length === 0) {
+    statusEl.textContent = 'Seleziona almeno una materia.';
+    statusEl.classList.add('err');
+    return;
+  }
+
+  genBtn.disabled = true;
+  statusEl.textContent = 'Generazione in corso\u2026';
+
+  setTimeout(() => {
+    try {
+      const fname = generateCombinedPdf(selected, classe);
+      statusEl.textContent = 'Scaricato ' + fname + ' (' + selected.length + (selected.length === 1 ? ' materia' : ' materie') + ').';
+    } catch (e) {
+      console.error(e);
+      statusEl.textContent = 'Errore nella generazione del PDF.';
+      statusEl.classList.add('err');
+    } finally {
+      genBtn.disabled = false;
+    }
+  }, 30);
+});
+
+</script>
+</body>
+</html>
