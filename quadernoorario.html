@@ -400,15 +400,30 @@
     nav.steps{ flex-direction:row; flex-wrap:wrap; }
     .rail-foot{ display:none; }
   }
+  /* ============ ADATTAMENTO SCHERMI PICCOLI (telefoni, sotto 480px) ============
+     Sotto questa soglia l'intera pagina viene rimpicciolita in blocco (vedi script
+     in fondo al file) invece di essere semplicemente compressa: così nulla viene
+     tagliato e non serve scorrere lateralmente. Per farlo funzionare bene, sotto
+     i 480px disattiviamo lo scroll orizzontale interno della tabella oraria, in
+     modo che la sua larghezza "vera" contribuisca alla misura complessiva della
+     pagina che lo script usa per calcolare lo zoom automatico. */
+  @media (max-width: 479px){
+    .grid-wrap{ overflow: visible; }
+  }
+  #scaleViewport{ width:100%; }
+  .scale-inner{ transform-origin: top left; }
   @media print{
     .rail, .panel-actions, .result-tabs{ display:none !important; }
     body{ background: white; }
     .app{ display:block; max-width:100%; padding:0; }
+    .scale-inner{ transform:none !important; position:static !important; width:auto !important; }
+    #scaleViewport{ height:auto !important; position:static !important; }
   }
 </style>
 </head>
 <body>
 
+<div id="scaleViewport"><div class="scale-inner" id="scaleInner">
 <div class="app">
   <aside class="rail">
     <div class="brand">
@@ -530,6 +545,7 @@
 
   </main>
 </div>
+</div></div>
 
 <script>
 'use strict';
@@ -1966,6 +1982,75 @@ renderYearsGrid();
 renderClassList();
 renderSpecialistList();
 goToStep('struttura');
+
+/* ---------------------- ADATTAMENTO SCHERMI PICCOLI (< 480px) ----------------------
+   Su telefoni la pagina non deve essere tagliata né richiedere scorrimento
+   orizzontale: sotto i 480px l'intera app viene rimpicciolita "in blocco"
+   (transform: scale) fino a entrare nella larghezza dello schermo, misurando
+   la larghezza/altezza reali del contenuto (compresa la tabella oraria, il cui
+   scroll interno viene disattivato sotto i 480px via CSS) e ricalcolando ogni
+   volta che il contenuto cambia dimensione (cambio di pannello, generazione
+   dell'orario, apertura di una scheda, rotazione dello schermo, ecc.). */
+(function () {
+  var MOBILE_MAX = 480;
+  var pending = false;
+
+  function applyScale() {
+    pending = false;
+    var viewport = document.getElementById('scaleViewport');
+    var inner = document.getElementById('scaleInner');
+    var app = document.querySelector('.app');
+    if (!viewport || !inner || !app) return;
+
+    if (window.innerWidth >= MOBILE_MAX) {
+      inner.style.transform = '';
+      inner.style.position = '';
+      inner.style.top = '';
+      inner.style.left = '';
+      inner.style.width = '';
+      viewport.style.height = '';
+      viewport.style.position = '';
+      return;
+    }
+
+    // reset PRIMA di misurare: se non lo facessimo, la larghezza fissa
+    // (in px) lasciata dal calcolo precedente farebbe da "contenitore"
+    // per .app e falserebbe la misura della larghezza naturale attuale.
+    inner.style.transform = '';
+    inner.style.position = '';
+    inner.style.top = '';
+    inner.style.left = '';
+    inner.style.width = '';
+
+    var naturalW = app.scrollWidth;
+    var naturalH = app.scrollHeight;
+    if (!naturalW || !naturalH) return;
+    var scale = Math.min(1, window.innerWidth / naturalW);
+
+    inner.style.width = naturalW + 'px';
+    inner.style.position = 'absolute';
+    inner.style.top = '0';
+    inner.style.left = '0';
+    inner.style.transform = 'scale(' + scale + ')';
+    viewport.style.position = 'relative';
+    viewport.style.height = Math.ceil(naturalH * scale) + 'px';
+  }
+
+  function scheduleScale() {
+    if (pending) return;
+    pending = true;
+    requestAnimationFrame(applyScale);
+  }
+
+  window.addEventListener('resize', scheduleScale);
+  window.addEventListener('orientationchange', scheduleScale);
+
+  scheduleScale();
+  var appEl = document.querySelector('.app');
+  if (window.ResizeObserver && appEl) {
+    new ResizeObserver(scheduleScale).observe(appEl);
+  }
+})();
 </script>
 </body>
 </html>
