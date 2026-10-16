@@ -1,0 +1,133 @@
+<!-- Incolla tutto questo in un blocco "HTML personalizzato" di WordPress -->
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,600&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+.mnsv{max-width:1000px;margin:0 auto;font-family:Poppins,system-ui,sans-serif;color:#1A1A1A}
+.mnsv *{box-sizing:border-box}
+.mnsv-sec{margin:0 0 14px;border:1px solid #DADADA;border-radius:16px;background:#fff;overflow:hidden}
+.mnsv-sec>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:14px;padding:16px 20px;background:linear-gradient(180deg,#EFEFEF 0%,#FAFAFA 100%);border-bottom:4px solid #1A1A1A;user-select:none;-webkit-user-select:none}
+.mnsv-sec>summary::-webkit-details-marker{display:none}
+.mnsv-t{flex:1;min-width:0;font-family:Newsreader,Georgia,serif;font-weight:600;font-size:23px;line-height:1.15;margin:0}
+.mnsv-n{flex:none;font-size:12.5px;font-weight:600;color:#fff;background:#C0262D;padding:6px 13px;border-radius:999px;white-space:nowrap}
+.mnsv-n.zero{background:#9A9A9A}
+.mnsv-ch{flex:none;width:22px;height:22px;transition:transform .25s}
+.mnsv-sec[open] .mnsv-ch{transform:rotate(180deg)}
+.mnsv-body{padding:18px 20px 22px}
+.mnsv-intro{margin:0 0 18px;font-size:15px;line-height:1.65;color:#4A4A4A;font-weight:300}
+.mnsv-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}
+.mnsv-v{display:flex;flex-direction:column;gap:8px}
+.mnsv-play{position:relative;display:block;width:100%;padding:0;padding-top:56.25%;border:0;border-radius:12px;overflow:hidden;background:#1A1A1A center/cover no-repeat;cursor:pointer}
+.mnsv-play::after{content:"";position:absolute;left:50%;top:50%;width:58px;height:40px;margin:-20px 0 0 -29px;border-radius:12px;background:rgba(26,26,26,.82) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M8 5v14l11-7z' fill='%23fff'/%3E%3C/svg%3E") center/24px no-repeat;transition:background-color .15s}
+.mnsv-play:hover::after{background-color:#C0262D}
+.mnsv-v iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:0}
+.mnsv-vt{font-size:14px;line-height:1.4;font-weight:500;margin:0}
+.mnsv-vt a{color:#1A1A1A;text-decoration:none}
+.mnsv-vt a:hover{color:#C0262D}
+.mnsv-shelf{margin-top:30px}
+.mnsv-sh{font-family:Newsreader,Georgia,serif;font-weight:600;font-size:19px;margin:0 0 6px}
+.mnsv-books{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));background-image:repeating-linear-gradient(to bottom,transparent 0,transparent 180px,#c69a6b 180px,#c69a6b 186px,#b4875a 186px,#b4875a 194px,#8a6038 194px,#8a6038 196px,rgba(60,35,10,.28) 196px,rgba(60,35,10,0) 206px,transparent 206px,transparent 280px)}
+.mnsv-book{display:flex;flex-direction:column;min-width:0;height:280px;overflow:hidden}
+.mnsv-slot{height:196px;flex:none;display:flex;align-items:flex-end;justify-content:center;padding:0 10px 16px}
+.mnsv-slot img{display:block;max-width:100%;max-height:170px;width:auto;height:auto;border-radius:2px 4px 4px 2px;box-shadow:2px 4px 8px rgba(0,0,0,.28);transition:transform .2s}
+.mnsv-slot img:hover{transform:translateY(-6px)}
+.mnsv-bt{margin:12px 8px 2px;font-size:13px;line-height:1.3;font-weight:600;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.mnsv-ba{margin:0 8px;font-size:11.5px;line-height:1.35;color:#8A8A8A;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.mnsv-empty{font-size:14px;color:#9A9A9A;margin:0}
+@media (max-width:560px){.mnsv-books{grid-template-columns:repeat(2,minmax(0,1fr))}.mnsv-sec>summary{padding:14px 16px;gap:10px}.mnsv-t{font-size:19px}.mnsv-body{padding:16px}.mnsv-grid{grid-template-columns:1fr}}
+</style>
+
+<div class="mnsv" id="mnsv"></div>
+
+<script>
+(function(){
+/* ====== QUI PUOI AGGIUNGERE O TOGLIERE VIDEO ======
+   Per ogni argomento: titolo, testo e l'elenco dei codici YouTube
+   (il codice è la parte dopo "watch?v=" nell'indirizzo del video). */
+var ARGOMENTI = [
+ {t:"A caccia di numeri e lettere!", d:"Numeri e lettere sono ovunque: sui cartelli, nei libri, sui calendari, sugli autobus, sulle maglie, sulle confezioni. Cercarli con i bambini significa allenare lo sguardo, ma anche iniziare a chiedersi a cosa servono, dentro e fuori dalla scuola.",
+  v:["ZvqxkkvjCbs"], l:[101,102,104,54,60]},
+ {t:"Tanti numeri e conteggi", d:"Contare è un gesto antichissimo, nato dal bisogno di tenere traccia delle cose importanti. Con gli albi illustrati si può lavorare sui numeri, sulle loro rappresentazioni e sul conteggio in modo naturale e piacevole, passando dalla conta orale agli oggetti, fino ai numeri grandi che incuriosiscono anche i più piccoli.",
+  v:["NHgBTJ4euFY","hengfQ4rYfU","Os7XYfBStUs","PSvAJTTM8uI"], l:[105,106,107,108,109,110,48,49,50,51,52,53,55,56,57,59,61,62,63,64,65,71,72,73,74,75,76]},
+ {t:"Il nostro sistema decimale posizionale e il ruolo dello zero", d:"Il nostro sistema di numerazione è potente, ma complesso: il valore delle cifre cambia a seconda della posizione. Dentro questo sistema lo zero ha un ruolo speciale: sembra “niente”, ma cambia tutto. Proprio per questo è un tema matematico affascinante, perfetto anche per entrare nelle storie.",
+  v:["zz6IWAfCJL4","FLu5CT7PfPw"], l:[111,58]},
+ {t:"Linea dei numeri", d:"La linea dei numeri permette di “vedere” l’ordine: i numeri che crescono, uno dopo l’altro, senza fine. È uno strumento potente, che aiuta a dare forma a qualcosa di astratto. E proprio per questo può diventare anche racconto, dentro albi illustrati che la rendono visibile e immaginabile.",
+  v:[], l:[112,113]},
+ {t:"Operazioni tra numeri", d:"Aggiungere, togliere, distribuire, mettere insieme: le operazioni non sono solo esercizi, ma azioni che incontriamo continuamente nella vita quotidiana. Gli albi illustrati possono offrire situazioni vive da cui partire, trasformando addizioni, sottrazioni, moltiplicazioni e divisioni in esperienze vicine ai bambini.",
+  v:["0qqrj3kZNt0","-8M1xh3VEJo","HTCkwjnUqpU","okgT8jlze4E"], l:[114,115,116,66,67,68,69]},
+ {t:"Misuriamo tutto!", d:"Misurare significa provare a capire meglio il mondo: quanto è lungo, grande, alto, vicino, lontano. Si parte dalle parole e dalle percezioni dei bambini, poi si passa ai confronti, ai passi, ai palmi, fino alle unità di misura condivise. Gli albi illustrati possono aprire conversazioni preziose su grandezze, confronti e modi diversi di guardare le cose.",
+  v:["Toj9l2vtngQ","09GDLg7drgM","n4DFAXDP24k","7xhmGYcTI6w"], l:[117,118,119,120,77,78,79,80]},
+ {t:"Il tempo e noi", d:"Il tempo ci accompagna da subito: nelle routine, nell’attesa, nella fretta, nei giorni che passano e in quelli che ritornano. È una grandezza complessa, ma anche molto vicina alla vita dei bambini. Gli albi illustrati aiutano a esplorarla con delicatezza, tra tempo vissuto, tempo misurato e tempo che scorre.",
+  v:["ptgOU537Vpw","nD3HcAWvy_0","ZGtVBfc3ZIQ"], l:[121,122,123,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97]},
+ {t:"Tanti problemi", d:"“Problema” è una parola grande: può indicare una difficoltà quotidiana, una domanda aperta, una situazione da capire, oppure il testo matematico che si incontra a scuola. Gli albi illustrati permettono di entrarci con delicatezza, aprendo discussioni su cosa sia davvero un problema e su come si possa affrontare.",
+  v:["RiY9dYR1DFg","FPzp1ENbky0","Gn1kwF_4G4Q","BYN8lLAqKJM"], l:[124]},
+ {t:"Questioni di punti di vista!", d:"Cambiare punto di vista significa imparare a guardare le cose anche da dove non siamo noi. È una competenza matematica, linguistica, sociale. Gli albi illustrati sono un buon punto di partenza per discuterne: mostrano che una stessa situazione può essere letta, raccontata e capita in modi diversi.",
+  v:["LVKv7OQ7KFs","dBtHOTlf8wY","aVSx-CSFkfA","sk4uSRERhY4","VRGX7T_XZ3g","sdlTGLT8TmY","rOHN8nrOQ-E","V5cmyIC-1YM","fxckWWtG0_4","BSU2KW6BIuo","beHEQGFauzY","IdmKOKyrpDE","BeOOLsJzFH4","l41WtRz9fw0"], l:[125,2,3,4,10,12,14,19,20,21]},
+ {t:"Geometria e narrazione", d:"La geometria ha una forza narrativa sorprendente: punti, linee, forme, colori e orientamenti possono diventare personaggi, paesaggi, storie. Gli albi illustrati geometrici aprono mondi semplici e potenti, e invitano i bambini non solo a osservare le figure, ma anche a reinventarle con fogli, matite e ritagli di carta.",
+  v:["xDDH5IleBMw","RTW_jzP3qCw","8tBEnMHpgyQ","Hoxtoo2jNRY","Fc4VaE0h9DE","PlMFK0PVSqI","mWmwgtfqRmA","QkUkcNsyz-E","zNcXMWf9f2U","-gaiaIr5WoI","XsuzIaVD81A","mQquELLOfJA","Ww37usj_bSU","HGK1dVaG9tw","XLR0IwOLmMk","oaBupbUu6pY","dw1_EaequH4"], l:[126,127,128,24,32,36,40,41,42,43,44,45,46,47]},
+ {t:"La logica della matematica", d:"", v:[], l:[98,99,100]}
+];
+
+/* Albi sullo scaffale: numero copertina → [titolo, autori, editore e anno] */
+var LIBRI = {"101":["Numeri nascosti","Imapla","Pulce, 2011"],"102":["Lettere nascoste","Imapla","Pulce, 2011"],"103":["1 2 3 D’arte. Numeri nascosti nei quadri","Guèry, Dussutour","Franco Cosimo Panini, 2012"],"104":["A B C D’arte. Lettere nascoste nei quadri","Guèry, Dussutour","Franco Cosimo Panini, 2011"],"105":["Undici gatti paracadutisti","Terzaghi, Zürcher","Edizioni AER, 1997"],"106":["Storie di numeri","Casadei","Edizioni didattica attiva, 2023"],"107":["Cinque topolini","Girón","Kalandraka, 2024"],"108":["The orange book. 1, 2 … 14 arance","McGuire","Corraini Edizioni, 2001"],"109":["Un volo spaziale","Ohmura","Babalibri, 2024"],"110":["Numeri, stelle e mucche di mare","Romanyshyn, Lesiv","Jaca Book, 2019"],"111":["Il polpo ha zero ossa","Richardson, Antonori","Editoriale Scienza, 2022"],"112":["La casa a 100 piani","Toshio","L’ippocampo, 2023"],"113":["La casa a 100 piani sotto terra","Toshio","L’ippocampo, 2023"],"114":["Il viaggio di Piccola Talpa","Lallemand, Frossard","Auzou / Gribaudo, 2019"],"115":["Storie di un pollaio. Battibecchi da cortile","Cardon","Sassi, 2016"],"116":["Troppi conigli","Calì, Benetti","Kite, 2021"],"117":["La casa perfetta","Antonioni, Sala","Zoolibri, 2021"],"118":["A volte sono…","Sonato","Sabir Editore, 2024"],"119":["Quanti topolini fanno un elefante? E altre grandi domande su dimensioni e distanza","Turner, Cushley","Ide e Ali, 2020"],"120":["Misuriamo il mondo. Confrontiamo ciò che ci circonda","Gifford","2018"],"121":["Presto presto presto","Perrin","Franco Cosimo Panini, 2019"],"122":["Albero","Teckentrup","Sassi, 2016"],"123":["Il libro dei tempi","Duprat, Charbonnel","L’ippocampo, 2021"],"124":["La pecora 19","Lacasa, Martin","2024"],"125":["La cosa più importante","Abbatiello","Fatatrac, 1998"],"126":["Quello che basta","Crocicchi","Artebambini, 2023"],"127":["Sono io, sono proprio io","Lupi, Garner","Corraini Edizioni, 2024"],"128":["C’era una forma","Cruschiform, Gazhole","L’ippocampo, 2022"],"2":["Dentro o fuori? Uno sguardo tutto nuovo agli opposti","Hood, Fleck","La Margherita edizioni, 2017"],"3":["Dentro fuori","Ramstein, Aregui","La Margherita edizioni, 2018"],"4":["Mr Left & Mr Right","Fehr","Edicart, 2017"],"10":["Un’avventura a forma di labirinto","Artymowska","Terre di Mezzo, 2017"],"12":["Zoom","Banyai","Puffin Reprint, 2012"],"14":["3 è tanto o poco?","Barbero, Barbero","B edizioni design, 2009"],"19":["Gisella pipistrella","Willis, Ross","Il Castoro, 2019"],"20":["Ma che roba è?","Servant, Bonbon","Terre di Mezzo, 2016"],"21":["Un mare di tristezza","Borando","Minibombo, 2016"],"24":["Un gioco","Tullet","Franco Cosimo Panini, 2016"],"32":["Il paese dei quadrati (+ il paese dei cerchi)","Tonucci","Orecchio Acerbo, 2006"],"36":["Io e il mio gatto. Un’avventura tangram","Maranke, van der Linden","Lemniscaat, 2018"],"40":["Elmer l’elefante variopinto","Mckee","Mondadori, 1990"],"41":["Arcobaleno. Il pesciolino più bello di tutti i mari","Pfister","Nord-Sud edizioni, 1992"],"42":["La mia amica ape","Jay","Terre di Mezzo, 2017"],"43":["Vita da ape","Hall, Arsenault","Terre di Mezzo, 2019"],"44":["Ape, una piccola meraviglia della natura","Teckentrup","Sassi Junior, 2017"],"45":["L’alveare","Petrekova","Editoriale scienza, 2016"],"46":["Cosa fanno le api tutto il giorno nell’alveare?","De Sabata","De Agostini, 2004"],"47":["La mia casa è un esagono","Barbero, Barbero","B edizioni design, 2010"],"48":["Un libro","Tullet","Franco Cosimo Panini, 2010"],"49":["La rapa gigante","Tolstoj","Fabbri, 1999"],"50":["Le sorelle cinque dita","Cerasoli","Editoriale scienza, 2019"],"51":["Un pesciolino... Un libro per... GNAM!... contare","Mansfield, Flintham","La coccinella, 2016"],"52":["Le anatrine di Anatrella. Un libro per contare da 1 a 10","Barry","Ape, 2005"],"53":["Una cosa nera","Urberuaga","Lapis, 2015"],"54":["Topolini ciechi e altri numeri","Chermayeff","Corraini, 2014"],"55":["10 piccoli pinguini","Fromental, Jolivet","Il Castoro, 2010"],"56":["Mai contare sui topi","D’Angelo","Topipittori, 2008"],"57":["Le minestre magiche","Boujon","Babalibri, 2001"],"58":["La grande invenzione di Bubal","Cerasoli","Emme Edizioni, 2012"],"59":["Un pomeriggio… super!","Bagley","Terre di Mezzo, 2018"],"60":["Città di numeri","Bellei","Fatatrac, 2020"],"61":["Tutti in coda!","Ohmura","Babalibri, 2011"],"62":["Una, due, tre… 99 pecore!","Abedi","La Margherita edizioni, 2002"],"63":["Quanti siamo in casa","Minhós Martins","Topipittori, 2011"],"64":["Dalla testa ai piedi. Sopra sotto dentro fuori il corpo umano","Valente, Tessaro","Editoriale scienza, 2018"],"65":["Nel mio corpo… Fatatrac","Farkas",", 2020"],"66":["Chi mangerà la pesca?","Yoon","Editoriale Scienza, 2008"],"67":["Sally fa la spesa","Melvin","Rizzoli, 2017"],"68":["Al mercato","Mattiangeli, Nikolova","Topipittori, 2019"],"69":["Soldi in vendita","Pauli, de Weck","Casagrande, 2017"],"71":["Dieci paperelle in alto mare","Carle","Mondadori, 2006"],"72":["Tanti tanti tanti","Tessaro","Carthusia, 2012"],"73":["365 pinguini","Fromental, Jolivet","Il Castoro, 2017"],"74":["Quant’è grande un milione?","Milbourne, Riglietti","Usborne, 2013"],"75":["Milioni di gatti","Gàg","Elliot, 2016"],"76":["Tutti quanti contano","Roskifte","Edizioni EL, 2019"],"77":["La casa più grande del mondo","Lionni","Babalibri, 2008"],"78":["Indovina quanto bene ti voglio","McBratney","Nord-Sud, 2015"],"79":["Papà, mi prendi la luna, per favore?","Carle","La Margherita edizioni, 1986"],"80":["La bilancia di Moquis","Artioli, Serino","Edizioni Artestampa, 2010"],"82":["Prima e dopo","Ramstein, Aregui","L’ippocampo, 2014"],"83":["Dopo","Moreau","Orecchio Acerbo editore, 2014"],"84":["Il libro per contare","Pep, Cabassa","Logos, 2008"],"85":["Una giornata speciale","Bussolati","Lapis, 2015"],"86":["Il piccolo bruco Maisazio","Carle","Mondadori, 2009"],"87":["L’albero","Mari","Babalibri, 2007"],"88":["La rondine che voleva vedere l’inverno","Giordano","Lapis, 2017"],"89":["Una storia che cresce","Kraus, Oxenbury","Il Castoro, 2017"],"90":["Le cose che passano","Alemagna","Topipittori, 2019"],"91":["Ma l’orso ce l’ha l’orologio?","Fromental","Franco Cosimo Panini, 2019"],"92":["Che ora è?","Degl’Innocenti, Carabelli","Lapis, 2013"],"93":["La coccinella prepotente","Carle","Edizioni Mondadori, 1990"],"94":["Vorrei un tempo lento lento","Dal Gobbo, Fatus","Lapis, 2014"],"95":["La forma del tempo","Lorenzoni, Vignana","Lapis, 2018"],"96":["Uffa, quanto manca?","Willems","Il Castoro, 2016"],"97":["Il regalo","Gill","Corraini Edizioni, 2010"],"98":["È logico","Cerasoli","Emme edizioni, 2015"],"99":["Gatti neri gatti bianchi","Cerasoli","Editoriale Scienza, 2011"],"100":["L’insieme fa la forza","Cerasoli","Editoriale Scienza, 2013"]};
+/* Indirizzo della cartella dove WordPress ha messo le copertine (Media) */
+var COPERTINE = "https://matematichenonsinasce.com/wp-content/uploads/2026/10/";
+/* ================================================== */
+
+var box = document.getElementById('mnsv');
+var chev = '<svg class="mnsv-ch" viewBox="0 0 24 24" fill="none" stroke="#1A1A1A" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>';
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');}
+
+ARGOMENTI.forEach(function(a){
+  var d = document.createElement('details');
+  d.className = 'mnsv-sec';
+  var n = a.v.length, nl = (a.l || []).length, badge = [];
+  if (n) badge.push(n + ' video');
+  if (nl) badge.push(nl + (nl === 1 ? ' libro' : ' libri'));
+  d.innerHTML = '<summary><h3 class="mnsv-t">' + esc(a.t) + '</h3><span class="mnsv-n' + (badge.length ? '' : ' zero') + '">' + (badge.length ? badge.join(' · ') : 'in arrivo') + '</span>' + chev + '</summary>' +
+    '<div class="mnsv-body">' + (a.d ? '<p class="mnsv-intro">' + esc(a.d) + '</p>' : '') +
+    (n ? '<div class="mnsv-grid"></div>' : '') +
+    (nl ? '<div class="mnsv-shelf"><h4 class="mnsv-sh">' + (n ? 'Altri albi sullo scaffale' : 'Albi sullo scaffale') + '</h4><div class="mnsv-books"></div></div>' : '') +
+    (!n && !nl ? '<p class="mnsv-empty">I video su questo argomento arriveranno presto.</p>' : '') + '</div>';
+  var built = false;
+  d.addEventListener('toggle', function(){
+    if (!d.open || built) return;
+    built = true;
+    var shelf = d.querySelector('.mnsv-books');
+    (a.l || []).forEach(function(num){
+      var b = LIBRI[num]; if (!b) return;
+      var file = 'albo-' + (num < 10 ? '0' + num : num) + '.jpg';
+      var el = document.createElement('div');
+      el.className = 'mnsv-book';
+      el.innerHTML = '<div class="mnsv-slot"><img loading="lazy" alt="' + esc(b[0]) + '" src="' + COPERTINE + file + '"></div>' +
+        '<p class="mnsv-bt">' + esc(b[0]) + '</p><p class="mnsv-ba">' + esc(b[1]) + ' · ' + esc(b[2]) + '</p>';
+      var img = el.querySelector('img');
+      img.onerror = function(){ if (img.src.indexOf(COPERTINE) === 0) img.src = 'albi/' + file; else img.style.visibility = 'hidden'; };
+      shelf.appendChild(el);
+    });
+    var grid = d.querySelector('.mnsv-grid');
+    if (!grid) return;
+    a.v.forEach(function(id){
+      var url = 'https://www.youtube.com/watch?v=' + id;
+      var v = document.createElement('div');
+      v.className = 'mnsv-v';
+      v.innerHTML = '<button type="button" class="mnsv-play" aria-label="Guarda il video" style="background-image:url(https://i.ytimg.com/vi/' + id + '/hqdefault.jpg)"></button>' +
+        '<p class="mnsv-vt"><a href="' + url + '" target="_blank" rel="noopener">Video su YouTube</a></p>';
+      var btn = v.querySelector('.mnsv-play');
+      btn.addEventListener('click', function(){
+        btn.innerHTML = '<iframe src="https://www.youtube-nocookie.com/embed/' + id + '?autoplay=1&rel=0" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen title="Video"></iframe>';
+        btn.style.cursor = 'default';
+        btn.className += ' on';
+        btn.setAttribute('style', btn.getAttribute('style') + ';background:#000');
+      }, {once:true});
+      grid.appendChild(v);
+      fetch('https://noembed.com/embed?url=' + encodeURIComponent(url)).then(function(r){return r.json();}).then(function(j){
+        if (j && j.title) { var link = v.querySelector('.mnsv-vt a'); link.textContent = j.title; btn.setAttribute('aria-label', 'Guarda: ' + j.title); }
+      }).catch(function(){});
+    });
+  });
+  box.appendChild(d);
+});
+var style = document.createElement('style');
+style.textContent = '.mnsv-play.on::after{display:none}';
+document.head.appendChild(style);
+})();
+</script>
