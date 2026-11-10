@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Generatore di striscioline per le verifiche</title>
+<style>
+  :root{--ink:#1E1E1E;--sec:#5C5C5C;--red:#B8352C;--warm:#FAF8F5;--line:#D9D4CC;--soft:#E6E2DC}
+  *{box-sizing:border-box}
+  body{margin:0;background:#F1EEE9;color:var(--ink);font-family:Carlito,Calibri,"Segoe UI",Helvetica,Arial,sans-serif;font-size:16px;line-height:1.45;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .wrap{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+  .kicker{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--red);font-weight:700;padding-bottom:6px;border-bottom:2px solid var(--red);display:inline-block;margin-bottom:10px}
+  h1{font-family:Georgia,"Times New Roman",serif;font-size:28px;margin:6px 0 6px;font-weight:700}
+  .lead{color:var(--sec);margin:0 0 20px}
+  .card{background:#fff;border:1px solid var(--line);border-top:3px solid var(--red);border-radius:4px;padding:16px 18px;margin-bottom:14px}
+  .card h2{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--sec);margin:0 0 10px;font-weight:700}
+  .row2{display:flex;gap:18px;flex-wrap:wrap}
+  .field{flex:1;min-width:200px}
+  label.t{display:block;font-weight:700;margin-bottom:5px}
+  input[type=number],select{width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:4px;font:inherit;background:#fff;color:var(--ink)}
+  .seg{display:flex;border:1px solid var(--line);border-radius:4px;overflow:hidden}
+  .seg label{flex:1;text-align:center;padding:8px 6px;cursor:pointer;background:#fff;border-right:1px solid var(--line)}
+  .seg label:last-child{border-right:0}
+  .seg input{display:none}
+  .seg input:checked+span{font-weight:700}
+  .seg label:has(input:checked){background:var(--ink);color:#fff}
+  .lvl{border:1px solid var(--soft);background:var(--warm);border-radius:4px;padding:10px 12px;margin-bottom:8px}
+  .lvl-top{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  .lvl-name{flex:1;min-width:170px;font-weight:700}
+  .stepper{display:flex;align-items:center;gap:0}
+  .stepper button{width:36px;height:36px;border:1px solid var(--line);background:#fff;font-size:20px;cursor:pointer;color:var(--ink)}
+  .stepper button:first-child{border-radius:4px 0 0 4px}
+  .stepper button:last-child{border-radius:0 4px 4px 0}
+  .stepper input{width:56px;height:36px;text-align:center;border:1px solid var(--line);border-left:0;border-right:0;border-radius:0;font:inherit;font-weight:700}
+  details{margin-top:8px}
+  summary{cursor:pointer;color:var(--sec);font-size:14px}
+  .ph{display:flex;gap:8px;align-items:flex-start;font-size:14px;padding:4px 0;cursor:pointer}
+  .ph input{margin-top:4px}
+  .status{margin-top:10px;font-size:15px}
+  .status.ok{color:#2f6b3a}
+  .status.warn{color:var(--red)}
+  .btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+  button.main{background:var(--red);color:#fff;border:0;border-radius:4px;padding:11px 20px;font:inherit;font-weight:700;cursor:pointer}
+  button.main:hover{background:#9E2B23}
+  button.sec{background:#fff;border:1px solid var(--line);border-radius:4px;padding:11px 16px;font:inherit;cursor:pointer;color:var(--ink)}
+  .hint{font-size:14px;color:var(--sec);margin:8px 0 0}
+
+
+  [hidden]{display:none!important}
+  textarea{width:100%;min-height:145px;resize:vertical;padding:8px;border:1px solid var(--line);border-radius:4px;font:inherit;color:var(--ink)}
+  .profile{margin:14px 0;padding:12px;background:var(--warm);border:1px solid var(--line);border-radius:4px}
+  .profile .row2{gap:10px}.profile .field{min-width:175px}
+  .profile-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}
+  #pages{overflow-x:auto}
+
+  /* strisce */
+  .bars{display:inline-flex;align-items:flex-end;gap:.1cm;height:.95cm}
+  .bars i{display:block;width:.26cm;border-radius:.05cm;background:var(--line)}
+  .bars i.on{background:var(--red)}
+  #pages{margin-top:22px}
+  .page{position:relative;width:18cm;height:26.4cm;background:#fff;margin:0 auto 18px;box-shadow:0 1px 6px rgba(0,0,0,.12);padding:0}
+  .page .sheet{display:flex;flex-direction:column;gap:.2cm}
+  .strip{height:1.85cm;display:flex;align-items:stretch;border:.7px dashed #5C5C5C;border-radius:.35cm;background:#fff;overflow:hidden}
+  .strip .lv{width:2.1cm;display:flex;align-items:center;justify-content:center;border-right:.6px solid var(--soft);margin:.2cm 0;padding:0 .1cm}
+  .strip .tx{flex:1;display:flex;align-items:center;padding:0 .35cm;font-size:10.5pt;line-height:1.4}
+  .strip .tx div{width:100%}
+  .upper .strip .tx{text-transform:uppercase;font-size:9.8pt}
+  .sign{position:absolute;left:0;right:0;bottom:.15cm;text-align:center;font-size:8pt;color:var(--sec)}
+  .empty{text-align:center;color:var(--sec);padding:30px 0}
+
+
+  /* Schedine di osservazione: titolo separato e tre righe ben distinte. */
+  .strip.observation-strip{height:auto;min-height:0;flex:none;display:block;
+    padding:.28cm .38cm .22cm;border:.7px dashed #888;border-radius:.22cm;
+    overflow:visible;overflow-wrap:anywhere;break-inside:avoid}
+  .observation-strip .obs-title{font-family:Georgia,"Times New Roman",serif;
+    font-size:11pt;font-weight:bold;line-height:1.3;color:var(--ink);
+    padding:0 0 .19cm;margin:0 0 .06cm;border-bottom:.6px solid var(--line)}
+  .observation-strip .obs-line{display:grid;grid-template-columns:3.05cm minmax(0,1fr);
+    column-gap:.3cm;align-items:start;padding:.18cm 0;font-size:10pt;line-height:1.35}
+  .observation-strip .obs-line+.obs-line{border-top:.5px solid var(--soft)}
+  .obs-key{display:flex;flex-direction:column;align-items:flex-start;gap:.12cm;padding-top:.01cm}
+  .obs-key b{font-size:9.5pt;line-height:1.2}
+  .obs-text{margin:0}
+  .battery{position:relative;display:inline-flex;gap:.045cm;align-items:stretch;
+    width:1.05cm;height:.38cm;padding:.045cm;border:1px solid #555;border-radius:.055cm;
+    margin-right:.1cm}
+  .battery:after{content:"";position:absolute;right:-.075cm;top:.09cm;
+    width:.06cm;height:.14cm;background:#555;border-radius:0 .025cm .025cm 0}
+  .battery i{flex:1;display:block;border:.4px solid #aaa;border-radius:.015cm;background:#fff}
+  .battery i.on{background:var(--red);border-color:var(--red)}
+  .upper .observation-strip .obs-title{text-transform:uppercase;font-size:10pt}
+  .upper .observation-strip .obs-line{text-transform:uppercase;font-size:9pt}
+  .upper .obs-key b{font-size:8.8pt}
+
+  @page{size:A4;margin:1.5cm}
+  @media print{
+    body{background:#fff}
+    .noprint{display:none!important}
+    .wrap{max-width:none;padding:0}
+    #pages{margin:0}
+    .page{box-shadow:none;margin:0;page-break-after:always;break-after:page}
+    .page:last-child{page-break-after:auto;break-after:auto}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="noprint">
+    <div class="kicker">Striscioline per le verifiche</div>
+    <h1>Generatore di striscioline</h1>
+    <p class="lead">Indica quante alunne e alunni sono in ciascun livello e in quale ambito: ottieni un unico file con le striscioline da stampare su carta adesiva, ritagliare e incollare sulla prova o sul quaderno.</p>
+
+    <div class="card">
+      <label class="t" for="mode">Quali striscioline vuoi preparare?</label>
+      <select id="mode"><option value="subject">Verifica · batterie e apprendimenti</option><option value="observation">Osservazione · autonomia, attenzione e concentrazione</option></select>
+      <p class="hint">Le due serie sono indipendenti: stampa prima le batterie e poi le osservazioni, da incollare una sotto l'altra.</p>
+    </div>
+    <div class="card">
+      <h2>1 · Classe e ambito</h2>
+      <div class="row2">
+        <div class="field">
+          <label class="t" for="n">Numero di alunne e alunni</label>
+          <input type="number" id="n" min="1" max="60" value="20">
+        </div>
+        <div class="field" id="subject-field">
+          <label class="t" for="amb">Ambito</label>
+          <select id="amb"></select>
+        </div>
+        <div class="field">
+          <label class="t">Carattere</label>
+          <div class="seg">
+            <label><input type="radio" name="case" value="min" checked><span>Minuscolo</span></label>
+            <label><input type="radio" name="case" value="max"><span>MAIUSCOLO</span></label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" id="subject-panel">
+      <h2>2 · Quanti per livello</h2>
+      <div id="levels"></div>
+      <div class="status" id="status"></div>
+      <div class="hint">Apri «Frasi usate» in ogni livello e spunta quelle che vuoi: le striscioline si alternano tra quelle scelte. Un livello senza frasi spuntate non compare.</div>
+    </div>
+
+    <div class="card" id="observation-panel" hidden>
+      <h2>2 · Come hai lavorato in questo compito</h2>
+      <p class="hint">Ogni gruppo produce una schedina con i livelli e le frasi visibili qui sotto. Puoi modificare ogni frase direttamente: verrà stampata esattamente come la vedi, solo per quel gruppo. Puoi avere, per esempio, autonomia Base e concentrazione Avanzato, qualunque sia il risultato della verifica. Aggiungi un gruppo per ogni profilo che ti serve e indica quante schedine produrre.</p>
+      <div id="profiles"></div>
+      <button type="button" class="sec" id="add-profile">Aggiungi un gruppo</button>
+      <div id="obs-status" class="status" role="status"></div>
+      <details><summary>Griglia di riferimento · leggi e modifica le descrizioni</summary>
+        <p class="hint">Quattro livelli adattati dalla griglia condivisa al compito svolto, senza equivalenze con voti. Verifica che la frase descriva ciò che hai osservato: puoi precisare i richiami, i passaggi completati o quelli rimasti in sospeso. La provenienza ministeriale non è verificata. Le frasi descrivono quanto osservato in questa attività. Questi sono i testi iniziali: le modifiche aggiornano i gruppi che non hanno già una frase personalizzata. Le frasi modificate direttamente in un gruppo valgono solo per quel gruppo. Le modifiche restano fino alla chiusura o al ricaricamento della pagina.</p>
+        <div id="descriptors"></div>
+      </details>
+    </div>
+    <div class="card">
+      <h2>3 · Copie e stampa</h2>
+      <div class="row2">
+        <div class="field" style="max-width:260px">
+          <label class="t" for="copies">Copie per alunna o alunno</label>
+          <input type="number" id="copies" min="1" max="10" value="1">
+        </div>
+      </div>
+      <div class="btns">
+        <button class="main" id="print">Stampa o salva in PDF</button>
+        <button class="sec" id="reset">Azzera questa serie</button>
+      </div>
+      <div class="hint" id="tot"></div>
+      <div class="hint">Nella finestra di stampa scegli «Salva come PDF» oppure la stampante con la carta adesiva; formato A4, scala 100%, senza intestazioni e piè di pagina del browser.</div>
+    </div>
+  </div>
+
+  <div id="pages"></div>
+</div>
+
+<script>
+const LV = ["Livello 5 · padronanza","Livello 4 · sicurezza","Livello 3 · adeguatezza","Livello 2 · consolidamento","Livello 1 · costruzione"];
+const SIGN = "© Rita Di Ianni · matematichenonsinasce · idee e materiali per la scuola primaria";
+
+/* DATI: per ogni ambito, 5 livelli (dal più alto al più basso), ciascuno con una lista di [parte in grassetto, resto] */
+const DATA = {
+"Generale": [
+ [["Padronanza sicura dei procedimenti.","Sai spiegare come ragioni: continua a esplorare nuove strade."],
+  ["Ragionamento chiaro e preciso.","Hai trovato la soluzione e sai anche dire perché funziona."],
+  ["Calcoli e strategie solidi e flessibili.","Puoi metterti alla prova con problemi più impegnativi."],
+  ["Lavoro preciso e completo.","Le tue idee possono essere preziose anche per la classe."],
+  ["Ottimo uso delle conoscenze matematiche.","Sai passare da un problema all'altro con sicurezza."],
+  ["Creatività nei problemi nuovi.","Bello il tuo modo di cercare più di una soluzione."]],
+ [["Sicura conoscenza dei procedimenti, con lievi imprecisioni.","Rileggere i calcoli ti porterà al massimo."],
+  ["Buona capacità di risolvere problemi.","Con una verifica finale del risultato puoi crescere ancora."],
+  ["Procedimenti corretti nella maggior parte delle situazioni.","Rileggi con calma: qualche distrazione si può evitare."],
+  ["Ragionamento ben avviato e ordinato.","Prova a spiegare a voce i passaggi per renderli ancora più saldi."],
+  ["Calcolo sicuro, con qualche svista.","Controllare i risultati ti aiuterà a evitarle."],
+  ["Strategie efficaci nei problemi.","Ora puoi cercare anche un secondo modo per arrivare alla soluzione."]],
+ [["Adeguata conoscenza dei procedimenti, con alcune incertezze.","Con un po' di esercizio sarà più sicura."],
+  ["Hai compreso le idee principali.","Continua ad allenarti sui passaggi che ti sembrano più difficili."],
+  ["Buon lavoro nei problemi più semplici.","Con la pratica puoi affrontare anche quelli più complessi."],
+  ["Il calcolo funziona in molti casi.","Ripassiamo insieme i procedimenti che ancora ti sfuggono."],
+  ["Strategie corrette, da rendere più stabili.","Disegni, schemi e materiali concreti possono aiutarti."],
+  ["Le tue conoscenze si stanno costruendo.","Con impegno e allenamento la matematica si costruisce."]],
+ [["Conoscenza essenziale dei procedimenti, ancora da consolidare.","Con esercizi mirati i progressi arriveranno."],
+  ["Hai capito alcune parti importanti.","Ripartiamo da lì, un passo alla volta."],
+  ["Questo lavoro è un buon punto di partenza.","Con materiali concreti e qualche esempio in più puoi crescere."],
+  ["Alcuni procedimenti sono ancora incerti.","Rifare insieme i passaggi ti aiuterà a vederli con più chiarezza."],
+  ["Stai imparando: l'errore ci mostra dove lavorare.","Con l'aiuto giusto puoi migliorare."],
+  ["Hai provato strade interessanti.","Ora le affiniamo con più esempi e un po' di tempo."]],
+ [["Conoscenza ancora in costruzione.","Con esercizio, aiuto e tempo i procedimenti diventeranno più chiari."],
+  ["Questo è un punto di partenza: abbiamo visto dove lavorare.","Insieme troveremo il percorso adatto."],
+  ["Per ora servono più esempi e materiali concreti.","Ogni piccolo passo avanti conta."],
+  ["Su questi argomenti serve ancora sostegno.","Chiedere aiuto fa parte del modo di imparare la matematica."],
+  ["I procedimenti sono ancora da costruire.","Con calma, esercizio e fiducia il lavoro darà frutti."],
+  ["Ripartiamo da ciò che sai già fare.","Costruiamo il resto insieme, un pezzo alla volta."]]
+],
+"Numeri e calcolo": [
+ [["Calcolo rapido e flessibile.","Scegli la strategia più comoda e sai spiegare perché funziona."],
+  ["Grande sicurezza con i numeri.","Puoi provare calcoli più ricchi e regolarità da scoprire."]],
+ [["Sicura padronanza del calcolo, con qualche svista.","Controllare le operazioni ti aiuterà a evitarle."],
+  ["Numeri e operazioni ben compresi.","Prova a confrontare due modi diversi per arrivare allo stesso risultato."]],
+ [["Adeguata conoscenza di numeri e operazioni.","Con l'allenamento i calcoli diventeranno più rapidi e sicuri."],
+  ["Il calcolo è corretto nei casi più semplici.","Schemi e materiali ti aiutano nei passaggi più lunghi."]],
+ [["Conoscenza essenziale di numeri e operazioni, ancora da consolidare.","Con esercizi mirati i progressi arriveranno."],
+  ["Alcune operazioni sono ancora incerte.","Con abaco, linea dei numeri e materiali concreti puoi rafforzarle."]],
+ [["Numeri e calcolo ancora in costruzione.","Con materiali concreti, esercizio e tempo diventeranno più chiari."],
+  ["Ripartiamo dai numeri che già padroneggi.","Allarghiamo poco alla volta il campo di lavoro, insieme."]]
+],
+"Problemi": [
+ [["Problemi risolti con ragionamento chiaro.","Sai spiegare le tue scelte e cerchi anche strade diverse."],
+  ["Ottima capacità di affrontare situazioni nuove.","Puoi inventare problemi tuoi per mettere alla prova la classe."]],
+ [["Buona capacità di risolvere problemi.","Una verifica finale del risultato ti porterà al massimo."],
+  ["Strategie efficaci e ben organizzate.","Prova a spiegare a voce i passaggi per renderli ancora più saldi."]],
+ [["Hai compreso la situazione nei problemi più semplici.","Con la pratica potrai affrontare anche quelli più complessi."],
+  ["Strategie corrette, da rendere più stabili.","Disegni e schemi possono aiutarti a organizzare i dati."]],
+ [["Alcune parti del problema sono chiare.","Rileggere il testo e rappresentarlo con un disegno ti aiuterà a procedere."],
+  ["Hai provato strade interessanti.","Con più esempi e un po' di tempo le affiniamo insieme."]],
+ [["Per ora serve sostegno per capire la situazione.","Insieme la rappresentiamo con oggetti e disegni."],
+  ["Un problema è un invito a pensare.","Partiamo da casi piccoli e concreti per costruire la strada."]]
+],
+"Spazio e figure": [
+ [["Descrizione precisa delle figure e delle loro proprietà.","Sai riconoscere regolarità e usare il linguaggio giusto."],
+  ["Ottimo senso dello spazio.","Puoi esplorare costruzioni e trasformazioni più impegnative."]],
+ [["Sicura conoscenza delle figure, con lievi imprecisioni.","Osservare con più attenzione le caratteristiche ti porterà al massimo."],
+  ["Disegni e costruzioni ordinati.","Prova a descrivere a parole ciò che hai realizzato."]],
+ [["Adeguata conoscenza delle figure principali.","Con attività di costruzione e confronto diventerà più sicura."],
+  ["Riconosci figure e posizioni in situazioni semplici.","Piegare, ritagliare e disegnare ti aiuterà a coglierne le proprietà."]],
+ [["Conoscenza essenziale delle figure, ancora da consolidare.","Con materiali da toccare e costruire i progressi arriveranno."],
+  ["Alcune caratteristiche delle figure sono ancora incerte.","Osservarle e confrontarle insieme ti aiuterà a riconoscerle."]],
+ [["Figure e spazio ancora in costruzione.","Partiamo da oggetti da manipolare, osservare e disegnare."],
+  ["Ripartiamo da ciò che riconosci già.","Aggiungiamo una figura alla volta, con calma e materiale concreto."]]
+],
+"Misure": [
+ [["Misure usate con sicurezza e precisione.","Sai scegliere strumento e unità adatti e passare dall'una all'altra."],
+  ["Ottima capacità di stimare e di verificare.","Puoi misurare situazioni nuove e confrontare i risultati."]],
+ [["Sicura conoscenza delle misure, con lievi imprecisioni.","Controllare le unità di misura ti porterà al massimo."],
+  ["Strumenti usati correttamente.","Prova a stimare il risultato prima di misurare."]],
+ [["Adeguata conoscenza delle misure.","Con esperienze pratiche diventerà più sicura nei cambi di unità."],
+  ["Misuri correttamente in situazioni semplici.","Ripeti le misure con strumenti diversi per renderle più stabili."]],
+ [["Conoscenza essenziale delle misure, ancora da consolidare.","Misurare oggetti reali ti aiuterà a dare senso ai numeri."],
+  ["Alcune unità di misura sono ancora incerte.","Con strumenti concreti e confronti le rendiamo più chiare."]],
+ [["Il concetto di misura è ancora in costruzione.","Partiamo da confronti e misure con unità scelte da te."],
+  ["Ripartiamo dall'esperienza concreta.","Misurare insieme oggetti conosciuti ci darà una base solida."]]
+],
+"Dati e relazioni": [
+ [["Dati raccolti e rappresentati con chiarezza.","Sai leggere un grafico e trarne conclusioni ben argomentate."],
+  ["Ottimo ragionamento su relazioni e regolarità.","Puoi formulare previsioni e verificarle con i dati."]],
+ [["Sicura lettura di tabelle e grafici, con lievi imprecisioni.","Controllare scale ed etichette ti porterà al massimo."],
+  ["Relazioni e classificazioni ben impostate.","Prova a spiegare il criterio che hai scelto."]],
+ [["Adeguata lettura di dati e rappresentazioni semplici.","Con la pratica diventerà più sicura."],
+  ["Riconosci alcune relazioni e regolarità.","Tabelle e schemi ti aiuteranno a metterle in ordine."]],
+ [["Conoscenza essenziale di tabelle e grafici, ancora da consolidare.","Raccogliere dati dalla vita della classe ti aiuterà a dare loro senso."],
+  ["Alcune relazioni sono ancora incerte.","Con esempi concreti le osserviamo insieme."]],
+ [["Dati e relazioni ancora in costruzione.","Partiamo da raccolte semplici su ciò che conosci."],
+  ["Ripartiamo dal classificare e confrontare oggetti.","Un criterio alla volta, insieme."]]
+]
+};
+
+const $ = id => document.getElementById(id);
+const counts = [0,0,0,0,0];
+let selected = []; // per livello: array di booleani
+
+function bars(n){
+  let h = '';
+  for(let i=0;i<5;i++){
+    const ht = (0.3 + 0.7*i/4) * 0.95;
+    h += '<i class="' + (i<n ? 'on' : '') + '" style="height:' + ht.toFixed(2) + 'cm"></i>';
+  }
+  return '<span class="bars">' + h + '</span>';
+}
+
+function initAmbiti(){
+  const s = $('amb');
+  Object.keys(DATA).forEach(k => {
+    const o = document.createElement('option');
+    o.value = k; o.textContent = (k === 'Generale') ? 'Generale (tutti gli ambiti)' : k;
+    s.appendChild(o);
+  });
+}
+
+function buildLevels(){
+  const amb = $('amb').value;
+  const d = DATA[amb];
+  selected = d.map(lst => lst.map(() => false));
+  let html = '';
+  d.forEach((lst, i) => {
+    html += '<div class="lvl" data-i="' + i + '">' +
+      '<div class="lvl-top">' + bars(5 - i) +
+      '<div class="lvl-name">' + LV[i] + '</div>' +
+      '<div class="stepper"><button type="button" data-act="minus" aria-label="Meno">−</button>' +
+      '<input type="number" min="0" max="60" value="' + counts[i] + '" data-act="num">' +
+      '<button type="button" data-act="plus" aria-label="Più">+</button></div></div>' +
+      '<details><summary>Frasi usate (<span class="nsel">0</span> di ' + lst.length + ')</summary>';
+    lst.forEach((p, j) => {
+      html += '<label class="ph"><input type="checkbox" data-act="chk" data-j="' + j + '"><span><b>' + p[0] + '</b> ' + p[1] + '</span></label>';
+    });
+    html += '</details></div>';
+  });
+  $('levels').innerHTML = html;
+  render();
+}
+
+function status(){
+  const n = parseInt($('n').value) || 0;
+  const sum = counts.reduce((a,b) => a+b, 0);
+  const el = $('status');
+  let t, cls;
+  if(sum === n){ t = 'Assegnati ' + sum + ' su ' + n + ': tutto a posto.'; cls = 'ok'; }
+  else if(sum < n){ t = 'Assegnati ' + sum + ' su ' + n + ': ne mancano ' + (n - sum) + '.'; cls = ''; }
+  else { t = 'Assegnati ' + sum + ' su ' + n + ': ce ne sono ' + (sum - n) + ' in più.'; cls = 'warn'; }
+  el.textContent = t; el.className = 'status ' + cls;
+}
+
+function stripHTML(i, p){
+  return '<div class="strip"><div class="lv">' + bars(5 - i) + '</div><div class="tx"><div><b>' + p[0] + '</b> ' + p[1] + '</div></div></div>';
+}
+
+function render(){
+  if($("mode").value === "observation"){ renderObservations(); return; }
+  status();
+  const amb = $('amb').value;
+  const d = DATA[amb];
+  const copies = Math.max(1, parseInt($('copies').value) || 1);
+  const strips = [];
+  d.forEach((lst, i) => {
+    const idx = [];
+    lst.forEach((p, j) => { if(selected[i] && selected[i][j]) idx.push(j); });
+    const total = counts[i] * copies;
+    if(!idx.length || !total) return;
+    const base = Math.floor(total / idx.length), extra = total % idx.length;
+    idx.forEach((j, k) => {
+      const m = base + (k < extra ? 1 : 0);
+      for(let c = 0; c < m; c++) strips.push(stripHTML(i, lst[j]));
+    });
+  });
+  $('tot').textContent = strips.length ? ('Striscioline totali: ' + strips.length + ' (' + Math.ceil(strips.length / 12) + (Math.ceil(strips.length / 12) === 1 ? ' pagina' : ' pagine') + ' A4).') : '';
+  const pages = $('pages');
+  pages.className = ($('case') ? '' : '') + (document.querySelector('input[name=case]:checked').value === 'max' ? 'upper' : '');
+  if(!strips.length){ pages.innerHTML = '<div class="empty noprint">Indica quanti sono in ciascun livello e scegli le frasi (in «Frasi usate») per vedere qui le striscioline.</div>'; return; }
+  let out = '';
+  for(let s = 0; s < strips.length; s += 12){
+    out += '<div class="page"><div class="sheet">' + strips.slice(s, s + 12).join('') + '</div><div class="sign">' + SIGN + '</div></div>';
+  }
+  pages.innerHTML = out;
+}
+
+function setCount(i, v){
+  v = Math.max(0, Math.min(60, v|0));
+  counts[i] = v;
+  const inp = document.querySelector('.lvl[data-i="' + i + '"] input[data-act=num]');
+  if(inp) inp.value = v;
+  render();
+}
+
+
+const OBS_LEVELS = ['Avanzato', 'Intermedio', 'Base', 'In via di prima acquisizione'];
+const OBS_DIMS = ['Autonomia', 'Attenzione', 'Concentrazione'];
+const OBS_HELP = ['Pianificazione, organizzazione del materiale e avvio del compito', 'Attenzione alle indicazioni e alle richieste del compito', 'Continuità del lavoro e ripresa del compito dopo pause o distrazioni'];
+const OBS_TEXT = [
+ ["Hai organizzato e portato a termine le consegne di questo compito in autonomia, controllando di aver svolto tutte le parti.",
+  "Hai svolto questo compito generalmente in autonomia, con qualche indicazione per iniziare o proseguire e controllare le parti da completare.",
+  "Per proseguire e completare le diverse parti di questo compito hai avuto bisogno più volte di indicazioni e sollecitazioni.",
+  "In questo compito hai avuto bisogno di una guida passo passo per avviare e proseguire il lavoro; alcuni passaggi sono rimasti da completare anche con il supporto."],
+ ["Durante questo compito hai seguito con attenzione le indicazioni, tenendo presenti le richieste nelle diverse parti del lavoro.",
+  "Durante questo compito hai seguito le indicazioni nella maggior parte dei passaggi; qualche richiamo ti ha aiutato a riprendere le richieste.",
+  "Durante questo compito sono serviti più richiami per riportare l'attenzione sulle indicazioni e sulle parti che avevi tralasciato.",
+  "Durante questo compito hai avuto bisogno di indicazioni brevi e ripetute e di un affiancamento frequente per seguire le richieste."],
+ ["Hai mantenuto la concentrazione per tutta la durata di questo compito, lavorando con continuità fino alla conclusione.",
+  "Hai mantenuto la concentrazione per buona parte di questo compito; dopo qualche pausa hai ripreso il lavoro con un breve invito.",
+  "Durante questo compito il lavoro si è interrotto più volte; sono stati necessari inviti frequenti a riprendere e a rimanere sul passaggio da svolgere.",
+  "Durante questo compito la concentrazione si è mantenuta per brevi momenti; è stato necessario un affiancamento costante per riprendere il lavoro, rimasto in parte da completare."]
+];
+function esc(s){return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function newProfile(){return {levels:[0,0,0], count:0, texts:{}};}
+function profileText(p,d,l){return p.texts[d+'-'+l] ?? OBS_TEXT[d][l];}
+function refreshProfileText(i,d){
+  const p=profiles[i], l=p.levels[d];
+  const field=$('text-'+i+'-'+d);
+  field.hidden=l<0;
+  field.disabled=l<0;
+  field.value=l<0?'':profileText(p,d,l);
+  $('text-label-'+i+'-'+d).hidden=l<0;
+}
+let profiles = [newProfile()];
+function buildProfiles(){
+  $('profiles').innerHTML = profiles.map((p,i) => '<div class="profile" data-profile="'+i+'"><div class="profile-head"><b>Gruppo '+(i+1)+'</b><button type="button" class="sec" data-remove="'+i+'" aria-label="Elimina gruppo '+(i+1)+'">Elimina</button></div><div class="row2">'+OBS_DIMS.map((dim,d) => '<div class="field"><label class="t" for="p-'+i+'-'+d+'">'+dim+'</label><select id="p-'+i+'-'+d+'" data-dim="'+d+'">'+OBS_LEVELS.map((l,j)=>'<option value="'+j+'"'+(p.levels[d]===j?' selected':'')+'>'+l+'</option>').join('')+'<option value="-1"'+(p.levels[d]===-1?' selected':'')+'>Non osservata · non stampare</option></select><label class="hint" style="display:block;margin-bottom:5px" id="text-label-'+i+'-'+d+'" for="text-'+i+'-'+d+'"'+(p.levels[d]<0?' hidden':'')+'>Frase da stampare · modificabile</label><textarea id="text-'+i+'-'+d+'" data-text-dim="'+d+'"'+(p.levels[d]<0?' hidden disabled':'')+'>'+esc(p.levels[d]<0?'':profileText(p,d,p.levels[d]))+'</textarea></div>').join('')+'<div class="field"><label class="t" for="pc-'+i+'">Numero di alunne e alunni</label><input id="pc-'+i+'" type="number" min="0" max="60" data-count value="'+p.count+'"></div></div></div>').join('');
+}
+function initObservations(){
+  buildProfiles();
+  $('descriptors').innerHTML = OBS_DIMS.map((dim,d)=>'<h3>'+dim+'</h3><p class="hint">'+OBS_HELP[d]+'</p>'+OBS_LEVELS.map((level,l)=>'<label class="t" for="desc-'+d+'-'+l+'">'+level+'</label><textarea id="desc-'+d+'-'+l+'" data-d="'+d+'" data-l="'+l+'">'+esc(OBS_TEXT[d][l])+'</textarea>').join('')).join('');
+  $('descriptors').addEventListener('input',e=>{if(e.target.matches('textarea')){OBS_TEXT[+e.target.dataset.d][+e.target.dataset.l]=e.target.value;profiles.forEach((p,i)=>refreshProfileText(i,+e.target.dataset.d));render();}});
+  $('mode').addEventListener('change',()=>{const obs=$('mode').value==='observation';$('subject-panel').hidden=obs;$('subject-field').hidden=obs;$('observation-panel').hidden=!obs;render();});
+  $('add-profile').addEventListener('click',()=>{profiles.push(newProfile());buildProfiles();render();});
+  $('profiles').addEventListener('click',e=>{const b=e.target.closest('[data-remove]');if(!b)return;profiles.splice(+b.dataset.remove,1);if(!profiles.length)profiles.push(newProfile());buildProfiles();render();});
+  $('profiles').addEventListener('input',e=>{const p=e.target.closest('[data-profile]');if(!p)return;const model=profiles[+p.dataset.profile];if(e.target.hasAttribute('data-count')){model.count=Math.max(0,Math.min(60,parseInt(e.target.value)||0));}else if(e.target.hasAttribute('data-dim')){model.levels[+e.target.dataset.dim]=+e.target.value;refreshProfileText(+p.dataset.profile,+e.target.dataset.dim);}else if(e.target.hasAttribute('data-text-dim')){const d=+e.target.dataset.textDim;model.texts[d+'-'+model.levels[d]]=e.target.value;}render();});
+}
+function observationBattery(level){
+  const filled=4-level;
+  return '<span class="battery" role="img" aria-label="'+filled+' tacche su 4">'+Array.from({length:4},(_,i)=>'<i class="'+(i<filled?'on':'')+'"></i>').join('')+'</span>';
+}
+function renderObservations(){
+  const copies=Math.max(1,Math.min(10,parseInt($('copies').value)||1));
+  const n=Math.max(0,parseInt($('n').value)||0);
+  const strips=[];let assigned=0;let skipped=0;
+  profiles.forEach(p=>{
+    if(!p.levels.some(l=>l>=0)){skipped+=p.count;return;}
+    assigned+=p.count;
+    const html='<div class="strip observation-strip"><div class="obs-title">Come hai lavorato in questo compito?</div>'+p.levels.map((l,d)=>l<0?'':'<div class="obs-line"><div class="obs-key"><b>'+OBS_DIMS[d]+'</b>'+observationBattery(l)+'</div><p class="obs-text">'+esc(profileText(p,d,l))+'</p></div>').join('')+'</div>';
+    for(let c=0;c<p.count*copies;c++)strips.push(html);
+  });
+  const st=$('obs-status');
+  st.textContent='Assegnati '+assigned+' su '+n+(assigned===n?': tutto a posto.':assigned<n?': ne mancano '+(n-assigned)+'.':': ce ne sono '+(assigned-n)+' in più.')+(skipped?' Esclusi '+skipped+': nessuna dimensione osservata.':'');
+  st.className='status '+(assigned===n?'ok':assigned>n||skipped?'warn':'');
+  const pages=$('pages');pages.className=document.querySelector('input[name=case]:checked').value==='max'?'upper':'';
+  if(!strips.length){pages.innerHTML='<div class="empty noprint">Scegli i livelli delle tre dimensioni e indica quante schedine produrre per ogni gruppo.</div>';$('tot').textContent='';return;}
+  // Measure actual text so edited descriptions never get cut off or cross a page.
+  pages.innerHTML='<div class="page observation-page"><div class="sheet"></div><div class="sign">'+SIGN+'</div></div>';
+  let page=pages.firstElementChild;let sheet=page.querySelector('.sheet');let pageCount=1;
+  strips.forEach(html=>{
+    sheet.insertAdjacentHTML('beforeend',html);
+    let strip=sheet.lastElementChild;
+    const limit=page.clientHeight-38;
+    if(sheet.offsetHeight>limit && sheet.children.length>1){
+      strip.remove();
+      pages.insertAdjacentHTML('beforeend','<div class="page observation-page"><div class="sheet"></div><div class="sign">'+SIGN+'</div></div>');
+      page=pages.lastElementChild;sheet=page.querySelector('.sheet');sheet.appendChild(strip);pageCount++;
+    }
+  });
+  const oversized=[...pages.querySelectorAll('.sheet')].some(s=>s.offsetHeight>s.parentElement.clientHeight-38);
+  $('tot').textContent='Striscioline di osservazione: '+strips.length+' ('+pageCount+(pageCount===1?' pagina':' pagine')+' A4).'+(oversized?' Una descrizione è troppo lunga per una pagina: accorciala prima di stampare.':'');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  initObservations();
+  initAmbiti();
+  buildLevels();
+  $('amb').addEventListener('change', buildLevels);
+  $('n').addEventListener('input', render);
+  $('copies').addEventListener('input', render);
+  document.querySelectorAll('input[name=case]').forEach(r => r.addEventListener('change', render));
+  $('print').addEventListener('click', () => window.print());
+  $('reset').addEventListener('click', () => { if($('mode').value === 'observation'){ profiles = [newProfile()]; buildProfiles(); render(); return; } for(let i=0;i<5;i++) counts[i] = 0; buildLevels(); });
+  $('levels').addEventListener('click', e => {
+    const b = e.target.closest('button[data-act]'); if(!b) return;
+    const i = +b.closest('.lvl').dataset.i;
+    setCount(i, counts[i] + (b.dataset.act === 'plus' ? 1 : -1));
+  });
+  $('levels').addEventListener('input', e => {
+    if(e.target.dataset.act === 'num'){ setCount(+e.target.closest('.lvl').dataset.i, parseInt(e.target.value) || 0); }
+  });
+  $('levels').addEventListener('change', e => {
+    if(e.target.dataset.act === 'chk'){
+      const lv = e.target.closest('.lvl'); const i = +lv.dataset.i;
+      selected[i][+e.target.dataset.j] = e.target.checked;
+      lv.querySelector('.nsel').textContent = selected[i].filter(Boolean).length;
+      render();
+    }
+  });
+});
+</script>
+</body>
+</html>
